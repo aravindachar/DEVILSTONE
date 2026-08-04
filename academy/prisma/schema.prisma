@@ -1,0 +1,51 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String         @id @default(uuid())
+  email     String         @unique
+  createdAt DateTime       @default(now()) @map("created_at")
+  progress  UserProgress[]
+
+  @@map("users")
+}
+
+model Session {
+  id         String     @id @default(uuid())
+  title      String
+  orderIndex Int        @map("order_index")
+  subtopics  Subtopic[]
+
+  @@map("sessions")
+}
+
+model Subtopic {
+  id          String         @id @default(uuid())
+  sessionId   String         @map("session_id")
+  title       String
+  contentHtml String         @map("content_html")
+  orderIndex  Int            @map("order_index")
+  session     Session        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  progress    UserProgress[]
+
+  @@map("subtopics")
+}
+
+model UserProgress {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  subtopicId  String   @map("subtopic_id")
+  isCompleted Boolean  @default(false) @map("is_completed")
+  completedAt DateTime @default(now()) @map("completed_at")
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subtopic    Subtopic @relation(fields: [subtopicId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, subtopicId])
+  @@map("user_progress")
+}
