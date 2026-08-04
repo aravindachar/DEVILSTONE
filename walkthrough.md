@@ -1,36 +1,47 @@
-# DEVILSTONE Repository Unification Walkthrough
+# DEVILSTONE Vercel & TypeScript Compile Fixes Walkthrough
 
-We merged both project modules (`guitar-app` and `academy`) into a single unified directory at the repository root level (**`DevilsTone`**). This simplifies the layout, removes subfolders, and enables **zero-configuration deployments on Vercel**.
-
----
-
-## 1. Merged Folder Structure
-All files have been elevated to the repository root directory `DevilsTone/`:
-- **`src/`:** Shares all custom components, controls, metronome hooks, fretboards, shapes, views, and routing logic.
-- **`src/app/page.tsx`:** Renders the main **DEVILSTONE interactive fretboard console** on the home route (`/`).
-- **`src/app/academy/page.tsx`:** Renders the **DEVILSTONE Academy syllabus** curriculum on the `/academy` route.
-- **`prisma/`:** Holds database schemas (`schema.prisma`), migrations, and curriculum seeder scripts (`seed.js`).
-- **`package.json` / `tsconfig.json` / `next.config.ts`:** Consolidated Next.js configurations at the root level.
-- **`dev.db`:** Synced local SQLite database located directly in the root folder.
+We resolved the TypeScript type resolution and Prisma compilation issues encountered during Vercel builds.
 
 ---
 
-## 2. Dynamic Performance & Colors
-- **GPU-Accelerated Mesh Backgrounds:** Blobs are rendered as absolute divs animated with hardware-accelerated CSS `translate3d`, which offloads morphing workloads to the GPU compositor thread and removes scroll stuttering.
-- **Tuned Blur Thresholds:** Reduced glass panel backdrop-filter blur from `24px` to `12px` to drastically improve scrolling and hover reactivity.
-- **Colorized Academy Boxes:** Configured cyclic frosted glass color accents (Cyan, Rose, Amber, Blue) on the 20 Session accordion panels. Progress bars glow with their respective session colors (and green on 100% completion). 
+## 1. Resolved Issues
+
+### ✦ Issue 1: Missing `PrismaClient` Export from `@prisma/client`
+- **Cause:** When building on Vercel, dependency installation (`npm install`) finishes but standard Next.js compilation runs *before* the Prisma Client types are compiled. Because Prisma Client generates files inside `node_modules/@prisma/client` on-the-fly, the stub is loaded without any exported types, causing typescript errors.
+- **Solution:** Added a `"postinstall": "prisma generate"` script hook inside `package.json`. This forces Vercel to compile client definitions immediately after package installation is finished, ensuring `@prisma/client` types are available during TypeScript type checking.
+
+### ✦ Issue 2: Parameter `session`, `sub`, and `s` Implicit `any` Typings
+- **Cause:** Complex prisma `.findMany` nested selections fail to automatically resolve type parameters under strict TS mode.
+- **Solution:** Declared the interface type structure `SessionWithSubtopics` representing the query structure:
+  ```typescript
+  type SessionWithSubtopics = {
+    id: string;
+    title: string;
+    subtopics: {
+      id: string;
+      title: string;
+      contentHtml: string;
+      progress: {
+        isCompleted: boolean;
+      }[];
+    }[];
+  };
+  ```
+  Explicitly typed all map parameters (`session`, `sub`, `s`) within the REST API formatted response builder (`src/app/api/sessions/route.ts`).
+
+### ✦ Issue 3: Global Namespace Casting in `db.ts`
+- **Cause:** Casting `global` directly to database instances leads to warnings on hot-reloading.
+- **Solution:** Refactored `src/lib/db.ts` to declare `global.prisma` under the standard global typescript namespace layout:
+  ```typescript
+  declare global {
+    var prisma: PrismaClient | undefined;
+  }
+  ```
 
 ---
 
-## 3. Local Server Info
-- **Unified DEVILSTONE Platform:** Running at **[http://localhost:3001/](http://localhost:3001/)**
-  - **`/`**: Fretboard Console
-  - **`/academy`**: Academy Syllabus
-
----
-
-## 4. Vercel Zero-Config Deployment
-Since the Next.js project files are now situated directly at the root of the repository:
-1. Log into Vercel and import this repository.
-2. Vercel will **automatically detect** the Next.js framework in the root folder.
-3. You can click **Deploy** immediately with **zero custom directory configuration settings required**!
+## 2. Compilation Results
+- **Command:** `npm run build`
+- **Status:** **PASSED (Exit Code 0)**
+- **Prisma CLI Generation:** Successful (Post-migration check completes without errors).
+- **TypeScript Checking:** Resolved with 0 warnings and 0 type errors.

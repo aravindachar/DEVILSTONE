@@ -1,7 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+declare global {
+  // eslint-disable-next-line no-var
+  var prisma: PrismaClient | undefined;
+}
 
 let prisma: PrismaClient;
 
@@ -9,11 +12,11 @@ if (process.env.NODE_ENV === "production") {
   const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
   prisma = new PrismaClient({ adapter });
 } else {
-  if (!globalForPrisma.prisma) {
+  if (!global.prisma) {
     const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
-    globalForPrisma.prisma = new PrismaClient({ adapter });
+    global.prisma = new PrismaClient({ adapter });
   }
-  prisma = globalForPrisma.prisma;
+  prisma = global.prisma;
 }
 
 export { prisma };

@@ -1,6 +1,19 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 
+type SessionWithSubtopics = {
+  id: string;
+  title: string;
+  subtopics: {
+    id: string;
+    title: string;
+    contentHtml: string;
+    progress: {
+      isCompleted: boolean;
+    }[];
+  }[];
+};
+
 export async function GET() {
   try {
     // 1. Fetch or create default student user
@@ -30,15 +43,15 @@ export async function GET() {
     });
 
     // 3. Format sessions with calculated completion metrics
-    const formattedSessions = sessions.map((session) => {
-      const subtopics = session.subtopics.map((sub) => ({
+    const formattedSessions = (sessions as SessionWithSubtopics[]).map((session: SessionWithSubtopics) => {
+      const subtopics = session.subtopics.map((sub: SessionWithSubtopics['subtopics'][number]) => ({
         id: sub.id,
         title: sub.title,
         contentHtml: sub.contentHtml,
         isCompleted: sub.progress.length > 0 ? sub.progress[0].isCompleted : false,
       }));
 
-      const completedCount = subtopics.filter((s) => s.isCompleted).length;
+      const completedCount = subtopics.filter((s: { isCompleted: boolean }) => s.isCompleted).length;
       const progressPercent = subtopics.length > 0 
         ? Math.round((completedCount / subtopics.length) * 100)
         : 0;
