@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Silkscreen:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+:root {
+  --background: #FAF9F6;
+  --foreground: #111111;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* GPU Accelerated Background Mesh Blobs Container */
+.bg-mesh-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -10;
+  overflow: hidden;
+  background-color: #FAF9F6;
+  pointer-events: none;
+}
+
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.16;
+  will-change: transform;
+}
+
+.blob-blue {
+  top: -10%;
+  left: -10%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, rgba(30, 58, 138, 0.8) 0%, transparent 80%);
+  animation: float-blue 25s ease-in-out infinite alternate;
+}
+
+.blob-cyan {
+  top: -20%;
+  right: -10%;
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.8) 0%, transparent 80%);
+  animation: float-cyan 30s ease-in-out infinite alternate;
+}
+
+.blob-yellow {
+  bottom: -15%;
+  right: 10%;
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(circle, rgba(253, 224, 71, 0.8) 0%, transparent 80%);
+  animation: float-yellow 28s ease-in-out infinite alternate;
+}
+
+.blob-pink {
+  bottom: -10%;
+  left: 5%;
+  width: 42vw;
+  height: 42vw;
+  background: radial-gradient(circle, rgba(244, 63, 94, 0.8) 0%, transparent 80%);
+  animation: float-pink 27s ease-in-out infinite alternate;
+}
+
+@keyframes float-blue {
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate3d(8vw, 6vh, 0) scale(1.1) rotate(90deg); }
+  100% { transform: translate3d(-3vw, -4vh, 0) scale(0.95) rotate(180deg); }
+}
+
+@keyframes float-cyan {
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate3d(-6vw, 10vh, 0) scale(0.9) rotate(-120deg); }
+  100% { transform: translate3d(4vw, -6vh, 0) scale(1.05) rotate(240deg); }
+}
+
+@keyframes float-yellow {
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate3d(-10vw, -8vh, 0) scale(1.05) rotate(180deg); }
+  100% { transform: translate3d(6vw, 4vh, 0) scale(0.95) rotate(360deg); }
+}
+
+@keyframes float-pink {
+  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+  50% { transform: translate3d(12vw, -6vh, 0) scale(0.95) rotate(-90deg); }
+  100% { transform: translate3d(-8vw, 8vh, 0) scale(1.1) rotate(-180deg); }
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Colorful glass card panels to match the theme */
+.glass-card-cyan {
+  background: rgba(6, 182, 212, 0.035);
+  border: 1px solid rgba(6, 182, 212, 0.15) !important;
+}
+.glass-card-pink {
+  background: rgba(244, 63, 94, 0.035);
+  border: 1px solid rgba(244, 63, 94, 0.15) !important;
+}
+.glass-card-yellow {
+  background: rgba(253, 224, 71, 0.035);
+  border: 1px solid rgba(253, 224, 71, 0.15) !important;
+}
+.glass-card-blue {
+  background: rgba(30, 58, 138, 0.035);
+  border: 1px solid rgba(30, 58, 138, 0.15) !important;
+}
