@@ -22,7 +22,16 @@ function DevilstoneContent() {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
+    backgroundColor: '#000000',
+    width: '100%',
+    overflowX: 'hidden',
+  };
+
+  const contentWrapperStyle: React.CSSProperties = {
+    flex: '1 0 auto',
     padding: isFocusMode ? '0' : '0 30px 80px 30px',
+    boxSizing: 'border-box',
+    width: '100%',
   };
 
   // Floating Pill Navbar (Using Surface colors and 8px spacing system)
@@ -127,6 +136,7 @@ function DevilstoneContent() {
 
   return (
     <div className={isFocusMode ? "focus-mode-active" : ""} style={containerStyle}>
+      <div style={contentWrapperStyle}>
       {/* Floating Exit Focus Mode Button */}
       {isFocusMode && (
         <div style={{ position: 'fixed', top: '24px', right: '30px', zIndex: 1000 }}>
@@ -258,47 +268,139 @@ function DevilstoneContent() {
         </div>
       </div>
 
-      {/* Footer Section */}
-      <footer style={{ marginTop: '180px', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '50px', paddingBottom: '30px' }}>
-        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-[60px] max-w-[1200px] mx-auto mb-10" style={{ boxSizing: 'border-box' }}>
+      </div>
+
+      {/* Footer Section (Maple Wood Style) */}
+      <footer style={{ 
+        marginTop: '180px', 
+        borderTop: '4px solid #94A3B8', // Nickel fret wire line
+        backgroundColor: '#FAF9F6', // Maple wood background
+        color: '#1E293B',
+        padding: '60px 24px 40px 24px',
+        boxSizing: 'border-box'
+      }}>
+        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1.2fr] gap-[40px] max-w-[1200px] mx-auto mb-10" style={{ boxSizing: 'border-box' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, fontSize: '16px', color: '#F4F4F2', marginBottom: '16px' }}>
-              {logoIconSvg}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, fontSize: '16px', color: '#0F172A', marginBottom: '16px' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 22h20L12 2z" fill="#0F172A" />
+                <circle cx="12" cy="14" r="3" fill="#FAF9F6" />
+              </svg>
               <span>DEVILSTONE</span>
             </div>
-            <p style={{ fontSize: '13.5px', color: '#94A3B8', lineHeight: '1.6', maxWidth: '320px', margin: 0 }}>
+            <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: '1.6', maxWidth: '320px', margin: 0 }}>
               The ultimate interactive fretboard console and learning management system for guitarists. Master your theory with precision.
             </p>
           </div>
+          
           <div>
-            <h4 style={{ fontSize: '12px', fontWeight: 700, color: '#F4F4F2', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Navigation</h4>
+            <h4 style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Navigation</h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <li><a href="#fretboard" style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>Console</a></li>
-              <li><a href="#shapes" style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>Shapes</a></li>
-              <li><a href="#about" style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>About</a></li>
-              <li><Link href="/academy" style={{ fontSize: '13px', color: '#94A3B8', textDecoration: 'none' }}>Academy</Link></li>
+              <li>
+                <a href="#fretboard" style={{ fontSize: '13px', color: '#475569', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#00D7FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}>
+                  Console
+                </a>
+              </li>
+              <li>
+                <a href="#shapes" style={{ fontSize: '13px', color: '#475569', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#00D7FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}>
+                  Shapes
+                </a>
+              </li>
+              <li>
+                <Link href="/academy" style={{ fontSize: '13px', color: '#475569', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#00D7FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}>
+                  Academy
+                </Link>
+              </li>
             </ul>
           </div>
+
           <div>
-            <h4 style={{ fontSize: '12px', fontWeight: 700, color: '#F4F4F2', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Status</h4>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-              <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }}></span>
-              <span style={{ fontSize: '13px', color: '#94A3B8' }}>Engine: Active</span>
-            </div>
-            <p style={{ fontSize: '12px', color: '#4B5563', margin: 0, lineHeight: '1.4' }}>
-              Currently in active development. Version 2.0-Alpha.
+            <h4 style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Developer</h4>
+            <p style={{ fontSize: '14.5px', color: '#0F172A', fontWeight: 800, margin: '0 0 6px 0' }}>
+              Aravinda Kambar
             </p>
+            <p style={{ fontSize: '13px', color: '#475569', lineHeight: '1.5', margin: '0 0 16px 0' }}>
+              Enjoy and practice more! Contact for bugs and feedback.
+            </p>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+              <a 
+                href="https://www.linkedin.com/in/aravinda-kambar-58b622255/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ 
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(15, 23, 42, 0.12)',
+                  backgroundColor: 'rgba(15, 23, 42, 0.04)',
+                  color: '#1E293B',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#00D7FF';
+                  e.currentTarget.style.borderColor = '#00D7FF';
+                  e.currentTarget.style.backgroundColor = 'rgba(0, 215, 255, 0.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#1E293B';
+                  e.currentTarget.style.borderColor = 'rgba(15, 23, 42, 0.12)';
+                  e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.04)';
+                }}
+                title="LinkedIn Profile"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+              </a>
+              <a 
+                href="mailto:aravindachar2004@gmail.com"
+                style={{ 
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(15, 23, 42, 0.12)',
+                  backgroundColor: 'rgba(15, 23, 42, 0.04)',
+                  color: '#1E293B',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#00D7FF';
+                  e.currentTarget.style.borderColor = '#00D7FF';
+                  e.currentTarget.style.backgroundColor = 'rgba(0, 215, 255, 0.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#1E293B';
+                  e.currentTarget.style.borderColor = 'rgba(15, 23, 42, 0.12)';
+                  e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.04)';
+                }}
+                title="Send Email"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
         
-        <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.04)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1200px', margin: '0 auto', boxSizing: 'border-box', flexWrap: 'wrap', gap: '16px' }}>
-          <p style={{ fontSize: '12px', color: '#4B5563', margin: 0 }}>
-            © 2026 DEVILSTONE. All rights reserved. Designed and copywritten for aspiring guitarists.
+        <div style={{ borderTop: '1px solid rgba(15, 23, 42, 0.08)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1200px', margin: '0 auto', boxSizing: 'border-box', flexWrap: 'wrap', gap: '16px' }}>
+          <p style={{ fontSize: '12px', color: '#64748B', margin: 0 }}>
+            © 2026 DEVILSTONE. Designed and copywritten for aspiring guitarists.
           </p>
           <div style={{ display: 'flex', gap: '20px' }}>
-            <span style={{ fontSize: '12px', color: '#4B5563', cursor: 'pointer' }}>Privacy Policy</span>
-            <span style={{ fontSize: '12px', color: '#4B5563', cursor: 'pointer' }}>Terms of Service</span>
-            <span style={{ fontSize: '12px', color: '#4B5563', cursor: 'pointer' }}>Licensing</span>
+            <span style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#0F172A'} onMouseLeave={(e) => e.currentTarget.style.color = '#64748B'}>Privacy Policy</span>
+            <span style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#0F172A'} onMouseLeave={(e) => e.currentTarget.style.color = '#64748B'}>Terms of Service</span>
           </div>
         </div>
       </footer>
