@@ -30,22 +30,22 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const selectStyle: React.CSSProperties = {
     fontFamily: THEME.fonts.tech,
     padding: '10px 14px',
-    borderRadius: '12px',
-    border: '1px solid rgba(17, 17, 17, 0.08)',
-    backgroundColor: '#ffffff',
-    color: '#111111', // High contrast black
+    borderRadius: '10px', // Consistent corner radius
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    color: '#F4F4F2', // Soft off-white text
     fontSize: '13px',
     fontWeight: 500,
     outline: 'none',
     cursor: 'pointer',
     transition: 'all 0.2s',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.01)',
+    boxShadow: 'none',
     ...style,
   };
 
   const optionStyle: React.CSSProperties = {
-    color: '#111111', // Force black text inside dropdown options list
-    backgroundColor: '#ffffff', // Force white background inside options list
+    color: '#F4F4F2',
+    backgroundColor: '#121827',
   };
 
   return (
@@ -54,12 +54,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
       <select
         style={selectStyle}
         onFocus={(e) => {
-          e.currentTarget.style.borderColor = THEME.colors.textPrimary;
-          e.currentTarget.style.boxShadow = `0 0 0 3px rgba(17, 17, 17, 0.08)`;
+          e.currentTarget.style.borderColor = 'rgba(0, 215, 255, 0.4)'; // Subtle cyan focus
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
         }}
         onBlur={(e) => {
-          e.currentTarget.style.borderColor = 'rgba(17, 17, 17, 0.08)';
-          e.currentTarget.style.boxShadow = 'none';
+          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
         }}
         {...props}
       >

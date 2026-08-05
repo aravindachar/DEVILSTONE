@@ -43,6 +43,10 @@ interface AppContextType {
   isMinor: boolean;
   playFretNote: (fullNote: string) => void;
   strum: () => void;
+
+  // Focus Mode
+  isFocusMode: boolean;
+  setIsFocusMode: (f: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -62,6 +66,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [accentPattern, setAccentPattern] = useState<MetronomeAccent>('first');
   const [subdivision, setSubdivision] = useState<1 | 2>(1);
   const [swing, setSwing] = useState<number>(50);
+  const [isFocusMode, setIsFocusMode] = useState<boolean>(false);
 
   const metronome = useMetronome({
     getAudioContext,
@@ -137,6 +142,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isMinor: fretboard.isMinor,
         playFretNote: fretboard.playFretNote,
         strum: fretboard.strum,
+
+        isFocusMode,
+        setIsFocusMode,
       }}
     >
       {children}

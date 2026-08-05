@@ -26,10 +26,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col relative">
         {/* GPU-Accelerated Background Blobs */}
         <div className="bg-mesh-container">
-          <div className="bg-blob blob-blue" />
           <div className="bg-blob blob-cyan" />
-          <div className="bg-blob blob-yellow" />
-          <div className="bg-blob blob-pink" />
+          <div className="bg-blob blob-purple" />
+          <div className="bg-blob blob-amber" />
         </div>
         {children}
       </body>

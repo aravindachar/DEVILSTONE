@@ -8,6 +8,7 @@ import TuningSelect from './TuningSelect';
 import ScaleSelect from './ScaleSelect';
 import Dropdown from '../UI/Dropdown';
 import Button from '../UI/Button';
+import { toPng } from 'html-to-image';
 
 export const ControlPanel: React.FC = () => {
   const {
@@ -22,21 +23,18 @@ export const ControlPanel: React.FC = () => {
     cagedShape,
     setCagedShape,
     strum,
+    isFocusMode,
+    setIsFocusMode,
   } = useApp();
 
   const panelStyle: React.CSSProperties = {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: '20px',
+    gap: '24px',
     alignItems: 'flex-end',
     marginBottom: '30px',
-    backgroundColor: THEME.colors.cardBackground,
-    backdropFilter: 'blur(24px)',
-    WebkitBackdropFilter: 'blur(24px)',
-    padding: '24px 28px',
-    borderRadius: '24px',
-    boxShadow: THEME.colors.primaryGlow === 'none' ? undefined : '0 10px 40px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.5)',
-    border: '1px solid rgba(255, 255, 255, 0.4)',
+    padding: '20px 24px',
+    borderRadius: '16px',
     transition: 'all 0.3s ease',
   };
 
@@ -53,6 +51,30 @@ export const ControlPanel: React.FC = () => {
     { value: 'E', label: 'E Shape Chord' },
     { value: 'D', label: 'D Shape Chord' },
   ];
+
+  const exportFretboardImage = () => {
+    const node = document.querySelector('.fretboard-inner-wrapper');
+    if (!node) return;
+
+    // Convert the fretboard element to a PNG image
+    toPng(node as HTMLElement, {
+      backgroundColor: '#0B1020', // Clean dark contrast backdrop
+      style: {
+        borderRadius: '8px',
+        padding: '16px 20px',
+        overflow: 'hidden',
+      }
+    })
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.download = `devilstone-fretboard-${selectedKey}-${selectedScale.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((error) => {
+        console.error('Error exporting image:', error);
+      });
+  };
 
   return (
     <div 
@@ -88,19 +110,35 @@ export const ControlPanel: React.FC = () => {
         style={{ minWidth: '170px' }}
       />
 
-      <Button
-        variant="cyber"
-        onClick={strum}
-        style={{
-          marginLeft: 'auto',
-          alignSelf: 'stretch',
-          marginTop: 'auto',
-          fontSize: '12px',
-          padding: '10px 20px',
-        }}
-      >
-        <span>⚡</span> STRUM SCALE / CHORD
-      </Button>
+      {/* Unified Console Actions Toolbar */}
+      <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto', alignItems: 'center' }}>
+        <Button
+          variant="secondary"
+          onClick={exportFretboardImage}
+          style={{ padding: '10px 16px', fontSize: '12px' }}
+          title="Export Fretboard to Image"
+        >
+          Export
+        </Button>
+        
+        {!isFocusMode && (
+          <Button
+            variant="secondary"
+            onClick={() => setIsFocusMode(true)}
+            style={{ padding: '10px 16px', fontSize: '12px' }}
+          >
+            ⛶ Focus Mode
+          </Button>
+        )}
+
+        <Button
+          variant="cyber"
+          onClick={strum}
+          style={{ padding: '10px 18px', fontSize: '12px' }}
+        >
+          <span>⚡</span> Strum
+        </Button>
+      </div>
     </div>
   );
 };

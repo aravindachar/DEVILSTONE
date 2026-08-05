@@ -4,8 +4,8 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #FAF9F6;
-  --foreground: #111111;
+  --background: #000000; /* Pitch Black */
+  --foreground: #F4F4F2; /* Soft Off-White */
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: ui-monospace, monospace;
 }
@@ -28,106 +28,114 @@ body {
   height: 100vh;
   z-index: -10;
   overflow: hidden;
-  background-color: #FAF9F6;
+  background-color: #000000;
   pointer-events: none;
 }
 
 .bg-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.16;
+  filter: blur(100px);
   will-change: transform;
 }
 
-.blob-blue {
-  top: -10%;
-  left: -10%;
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, rgba(30, 58, 138, 0.8) 0%, transparent 80%);
-  animation: float-blue 25s ease-in-out infinite alternate;
-}
-
 .blob-cyan {
-  top: -20%;
-  right: -10%;
-  width: 40vw;
-  height: 40vw;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.8) 0%, transparent 80%);
-  animation: float-cyan 30s ease-in-out infinite alternate;
+  top: 5%;
+  left: -15%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(0, 215, 255, 0.28) 0%, transparent 80%);
+  animation: float-cyan 32s ease-in-out infinite alternate;
+  opacity: 0.07; /* Lightly visible */
 }
 
-.blob-yellow {
+.blob-purple {
   bottom: -15%;
-  right: 10%;
-  width: 45vw;
-  height: 45vw;
-  background: radial-gradient(circle, rgba(253, 224, 71, 0.8) 0%, transparent 80%);
-  animation: float-yellow 28s ease-in-out infinite alternate;
+  right: -10%;
+  width: 55vw;
+  height: 55vw;
+  background: radial-gradient(circle, rgba(124, 77, 255, 0.2) 0%, transparent 80%);
+  animation: float-purple 36s ease-in-out infinite alternate;
+  opacity: 0.05; /* Lightly visible */
 }
 
-.blob-pink {
-  bottom: -10%;
-  left: 5%;
-  width: 42vw;
-  height: 42vw;
-  background: radial-gradient(circle, rgba(244, 63, 94, 0.8) 0%, transparent 80%);
-  animation: float-pink 27s ease-in-out infinite alternate;
-}
-
-@keyframes float-blue {
-  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
-  50% { transform: translate3d(8vw, 6vh, 0) scale(1.1) rotate(90deg); }
-  100% { transform: translate3d(-3vw, -4vh, 0) scale(0.95) rotate(180deg); }
+/* Ambient Warm Amber glow only behind the hero area */
+.blob-amber {
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70vw;
+  height: 45vh;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 75%);
+  pointer-events: none;
+  opacity: 0.08; /* Lightly visible */
 }
 
 @keyframes float-cyan {
   0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
-  50% { transform: translate3d(-6vw, 10vh, 0) scale(0.9) rotate(-120deg); }
-  100% { transform: translate3d(4vw, -6vh, 0) scale(1.05) rotate(240deg); }
+  50% { transform: translate3d(6vw, 5vh, 0) scale(1.05) rotate(60deg); }
+  100% { transform: translate3d(-3vw, -3vh, 0) scale(0.95) rotate(120deg); }
 }
 
-@keyframes float-yellow {
+@keyframes float-purple {
   0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
-  50% { transform: translate3d(-10vw, -8vh, 0) scale(1.05) rotate(180deg); }
-  100% { transform: translate3d(6vw, 4vh, 0) scale(0.95) rotate(360deg); }
-}
-
-@keyframes float-pink {
-  0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
-  50% { transform: translate3d(12vw, -6vh, 0) scale(0.95) rotate(-90deg); }
-  100% { transform: translate3d(-8vw, 8vh, 0) scale(1.1) rotate(-180deg); }
+  50% { transform: translate3d(-5vw, 6vh, 0) scale(0.95) rotate(-60deg); }
+  100% { transform: translate3d(3vw, -4vh, 0) scale(1.02) rotate(60deg); }
 }
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 24px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  background: rgba(18, 24, 39, 0.65); /* Surface #121827 translucent */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Extremely subtle border */
+  border-radius: 20px; /* Consistent corner radius */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-panel:hover {
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.28);
 }
 
 /* Colorful glass card panels to match the theme */
 .glass-card-cyan {
-  background: rgba(6, 182, 212, 0.035);
-  border: 1px solid rgba(6, 182, 212, 0.15) !important;
+  background: rgba(0, 215, 255, 0.02);
+  border: 1px solid rgba(0, 215, 255, 0.12) !important;
 }
 .glass-card-pink {
-  background: rgba(244, 63, 94, 0.035);
-  border: 1px solid rgba(244, 63, 94, 0.15) !important;
+  background: rgba(239, 68, 68, 0.02);
+  border: 1px solid rgba(239, 68, 68, 0.12) !important;
 }
 .glass-card-yellow {
-  background: rgba(253, 224, 71, 0.035);
-  border: 1px solid rgba(253, 224, 71, 0.15) !important;
+  background: rgba(245, 158, 11, 0.02);
+  border: 1px solid rgba(245, 158, 11, 0.12) !important;
 }
 .glass-card-blue {
-  background: rgba(30, 58, 138, 0.035);
-  border: 1px solid rgba(30, 58, 138, 0.15) !important;
+  background: rgba(124, 77, 255, 0.02);
+  border: 1px solid rgba(124, 77, 255, 0.12) !important;
+}
+
+/* Focus Mode Layout Overrides */
+.focus-mode-active nav,
+.focus-mode-active section,
+.focus-mode-active #shapes,
+.focus-mode-active #grimoire,
+.focus-mode-active #about,
+.focus-mode-active footer {
+  display: none !important;
+}
+
+.focus-mode-active body {
+  background-color: #080B14 !important;
+}
+
+.focus-mode-active #fretboard {
+  margin: 0 !important;
+  padding: 40px 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 100vh !important;
+  box-sizing: border-box !important;
 }

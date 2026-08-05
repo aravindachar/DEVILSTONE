@@ -259,6 +259,62 @@ export const SCALE_GRIMOIRE: Record<ScaleType, string> = {
     'Dreamy, spacey, and cinematic. A major scale with a raised 4th degree, giving it an ethereal, unresolved floating quality. Favored by Joe Satriani (e.g. "Flying in a Blue Dream") and sci-fi film composers.',
   'Locrian':
     'Tense, unstable, and dark. With a flat 2nd and flat 5th, it is the only standard mode with a diminished fifth interval from the root. Extremely dissonant, used in extreme metal and specialized avant-garde jazz.',
+  // Harmonic minor modes
+  'Locrian 13 or Locrian 6 (Half diminished)':
+    'Also known as the 2nd mode of Harmonic Minor. A Locrian scale with a natural 6th degree, reducing the dissonance of the flat 2nd. Used over half-diminished chords.',
+  'Ionian #5 (Augmented)':
+    'The 3rd mode of Harmonic Minor. An Ionian scale with a raised 5th degree, creating a tense, augmented sound characteristic of modern jazz and fusion.',
+  'Dorian #4 (Ukrainian dorian)':
+    'The 4th mode of Harmonic Minor. A minor mode with a raised 4th degree, creating a distinct and exotic European folk texture.',
+  'Phrygian dominant':
+    'The 5th mode of Harmonic Minor. Heavily used in flamenco, Middle Eastern, and neoclassical rock music. Highly exotic with a dominant sound.',
+  'Lydian #2':
+    'The 6th mode of Harmonic Minor. A Lydian scale with a raised 2nd degree, creating an dream-like, highly bright melodic quality.',
+  'Super Locrian bb7 (Diminished)':
+    'The 7th mode of Harmonic Minor. An altered dominant scale with a double-flat 7th, creating a highly complex altered resolution sound.',
+  // Bebop
+  'Dominant (Mixolydian) bebop':
+    'An 8-note scale that adds a passing natural 7th to the standard Mixolydian scale. Used in jazz improvisation to align chord tones with downbeats.',
+  'Major bebop':
+    'An 8-note scale that adds a passing flat 6th/sharp 5th to the major scale. Used by jazz players to improvise smooth, flowing runs.',
+  // Whole tone / Diminished
+  'Whole tone ext.':
+    'A symmetric scale composed entirely of whole-step intervals. Creates a dreamy, floating, and unstable whole-tone whole-scale sound.',
+  'Half Whole diminished':
+    'An 8-note symmetric scale alternating half and whole steps. Perfect for improvising over dominant-seventh flat-nine chords in jazz.',
+  'Half Whole diminished ext':
+    'An extended half-whole diminished arpeggiator structure containing extended tensions.',
+  'Whole Half diminished':
+    'An 8-note symmetric scale alternating whole and half steps. Used over fully diminished seventh chords to create dense, dark jazz lines.',
+  'Whole Half diminished ext.':
+    'An extended whole-half diminished arpeggiator structure containing extended tensions.',
+  // 6th Chords
+  'Minor 6th':
+    'An arpeggio spelling a minor triad with an added major 6th. Common in swing jazz, gypsy jazz, and bossa nova.',
+  'Major 6th':
+    'An arpeggio spelling a major triad with an added major 6th. Popular in country, swing, and early rock and roll.',
+  '6Add9':
+    'A bright, open chord arpeggio spelling a major triad with an added 6th and 9th, conveying a lush, modern resolution.',
+  'Minor 6 Add9':
+    'A mysterious, complex arpeggio spelling a minor triad with an added 6th and 9th, popular in cinematic jazz themes.',
+  // 7th Chords
+  'Major 7th':
+    'Spells a major triad with a natural 7th. Rich, warm, and highly expressive, forming the core of jazz harmonies.',
+  'Minor 7th':
+    'Spells a minor triad with a flat 7th. A cornerstone chord for jazz, soul, funk, and modern pop rhythms.',
+  'Dominant 7th':
+    'Spells a major triad with a flat 7th. Crucial for blues, funk, rock, and jazz dominant resolutions.',
+  'Half diminished 7th':
+    'Spells a minor triad with a flat 5th and flat 7th. Crucial chord for minor key progression turnarounds.',
+  'Diminished 7th':
+    'A fully symmetrical diminished arpeggio. Tense, classical, and movie-soundtrack friendly. Used to build instant suspense.',
+  '7sus4':
+    'Spells a suspended fourth triad with a flat 7th. Open, tension-heavy chord common in fusion and modal jazz.',
+  // 9th Chords
+  'Major 9th':
+    'Lush and sophisticated. Adds the natural 9th to the major seventh arpeggio. Crucial for dream pop and modern jazz.',
+  'Minor 9th':
+    'Warm and deep. Adds the natural 9th to the minor seventh arpeggio. Highly favored in neo-soul, R&B, and jazz.',
 };
 
 /**

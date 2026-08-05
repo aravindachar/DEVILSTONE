@@ -27,10 +27,10 @@ export const Slider: React.FC<SliderProps> = ({
 
   const sliderStyle: React.CSSProperties = {
     cursor: 'pointer',
-    accentColor: '#111111', // Solid black thumb
+    accentColor: THEME.colors.cyberCyan, // Electric Cyan thumb
     height: '6px',
     borderRadius: '8px',
-    backgroundColor: '#E5E7EB',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)', // Translucent track
     outline: 'none',
     width: '100%',
     ...style,

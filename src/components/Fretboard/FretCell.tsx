@@ -26,7 +26,7 @@ export const FretCell: React.FC<FretCellProps> = ({
     justifyContent: 'center',
     zIndex: 2,
     position: 'relative',
-    borderRight: fretIdx === 0 ? 'none' : `2px solid ${THEME.colors.fretLine}`,
+    borderRight: fretIdx === 0 ? 'none' : `3px solid ${THEME.colors.fretLine}`,
     minWidth: isMini 
       ? (fretIdx === 0 ? '40px' : '32px') 
       : (fretIdx === 0 ? '55px' : '45px'),

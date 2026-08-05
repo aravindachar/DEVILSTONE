@@ -1,32 +1,32 @@
 export const THEME = {
   colors: {
-    // Minimal Luxury Light Theme Palette
-    background: '#FFFFFF',        // Backup flat color (mesh background in CSS)
-    cardBackground: 'rgba(255, 255, 255, 0.65)', // Frosted glass card backing
-    textPrimary: '#111111',       // High contrast black
-    textSecondary: '#666666',     // Muted gray
-    textMuted: '#888888',
+    // Refined Dark Theme Palette (Designed by Apple/Linear/Raycast aesthetic)
+    background: '#000000',        // Pitch Black
+    cardBackground: 'rgba(18, 24, 39, 0.65)', // Surface #121827 backing
+    textPrimary: '#F4F4F2',       // Soft off-white text
+    textSecondary: '#94A3B8',     // Muted slate gray
+    textMuted: '#4B5563',
     
     // Core brand highlights
-    primary: '#111111',           // Primary buttons: solid black
-    primaryDark: '#000000',
-    primaryGlow: 'rgba(17, 17, 17, 0.1)',
-    cyberCyan: '#00eaff',         // Kept for specific neon accents if needed
+    primary: '#FFFFFF',           // Primary buttons
+    primaryDark: '#F4F4F2',
+    primaryGlow: 'rgba(255, 255, 255, 0.05)',
+    cyberCyan: '#00D7FF',         // Electric Cyan accent
     
-    // Metronome and secondary buttons
-    secondary: '#FFFFFF',
-    secondaryBorder: '#E5E7EB',
+    // Translucent surfaces & borders
+    secondary: 'rgba(255, 255, 255, 0.04)',
+    secondaryBorder: 'rgba(255, 255, 255, 0.06)',
     
-    accentCrimson: '#CB2957',      // Kept for stop button & root indicators (excellent contrast)
-    accentCrimsonGlow: 'rgba(203, 41, 87, 0.2)',
+    accentCrimson: '#EF4444',      // Desaturated Coral Red
+    accentCrimsonGlow: 'rgba(239, 68, 68, 0.15)',
     
-    pitchBlack: '#111111',
+    pitchBlack: '#000000',
     
     // Board Styling (High-contrast slate board)
-    nutColor: '#111111',          // Solid black nut
-    stringSilver: '#888888',      // Grey strings for visibility
-    fretLine: '#E5E7EB',          // Light gray fret borders
-    fretDot: '#D1D5DB',           // Subtle silver dot inlays
+    nutColor: '#1E293B',
+    stringSilver: '#64748B',
+    fretLine: '#94A3B8', // Solid nickel fret wire
+    fretDot: '#475569',                // dark clay dots
   },
   fonts: {
     tech: '"Inter", system-ui, sans-serif',

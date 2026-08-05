@@ -34,8 +34,8 @@ export const NoteMarker: React.FC<NoteMarkerProps> = ({
 
   const getScaleFactor = (): string => {
     if (isMini) return 'scale(1)';
-    if (isRoot) return 'scale(1.18)';
-    if (isCagedActive && isInCagedShape && isChordTone) return 'scale(1.1)';
+    if (isRoot) return 'scale(1.15)';
+    if (isCagedActive && isInCagedShape && isChordTone) return 'scale(1.08)';
     return 'scale(1)';
   };
 
@@ -44,19 +44,20 @@ export const NoteMarker: React.FC<NoteMarkerProps> = ({
     width: isMini ? '22px' : '32px',
     height: isMini ? '22px' : '32px',
     borderRadius: '50%',
-    color: '#ffffff',
+    color: '#F4F4F2', // Clean off-white text labels for minimal clutter
     fontWeight: 700,
     fontSize: isMini ? '9px' : '12px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-    border: isMini ? '1px solid #ffffff' : '2px solid #ffffff',
-    backgroundColor: isRoot ? '#CB2957' : '#008170',
-    boxShadow: isRoot
-      ? '0 0 10px rgba(203, 41, 87, 0.4)'
-      : '0 4px 8px rgba(0, 0, 0, 0.15)',
+    transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
+    border: isRoot 
+      ? (isMini ? '1px solid rgba(239, 68, 68, 0.7)' : '1.5px solid rgba(239, 68, 68, 0.8)') 
+      : (isMini ? '1px solid rgba(0, 215, 255, 0.5)' : '1.5px solid rgba(0, 215, 255, 0.65)'),
+    backgroundColor: 'rgba(18, 24, 39, 0.92)', // Dark Surface #121827 glass disc
+    backdropFilter: 'blur(4px)',
+    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)', // Clean, single source of depth
     transform: getScaleFactor(),
     opacity: getOpacity(),
   };
@@ -68,24 +69,28 @@ export const NoteMarker: React.FC<NoteMarkerProps> = ({
       onClick={onClick}
       style={markerStyle}
       onMouseEnter={(e) => {
+        e.currentTarget.style.transform = `${getScaleFactor()} scale(1.05)`;
         if (isRoot) {
-          e.currentTarget.style.boxShadow = '0 0 14px #CB2957';
+          e.currentTarget.style.borderColor = '#EF4444';
+          e.currentTarget.style.boxShadow = '0 4px 10px rgba(239, 68, 68, 0.2)';
         } else {
-          e.currentTarget.style.backgroundColor = '#005B41'; // dark emerald hover
-          e.currentTarget.style.boxShadow = '0 0 8px rgba(0, 129, 112, 0.4)';
+          e.currentTarget.style.borderColor = '#00D7FF';
+          e.currentTarget.style.boxShadow = '0 4px 10px rgba(0, 215, 255, 0.2)';
         }
+        e.currentTarget.style.backgroundColor = 'rgba(18, 24, 39, 0.98)';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = isRoot
-          ? '#CB2957'
-          : '#008170';
-        e.currentTarget.style.boxShadow = isRoot
-          ? '0 0 10px rgba(203, 41, 87, 0.4)'
-          : '0 4px 8px rgba(0, 0, 0, 0.15)';
+        e.currentTarget.style.transform = getScaleFactor();
+        e.currentTarget.style.backgroundColor = 'rgba(18, 24, 39, 0.92)';
+        e.currentTarget.style.borderColor = isRoot 
+          ? (isMini ? 'rgba(239, 68, 68, 0.7)' : 'rgba(239, 68, 68, 0.8)') 
+          : (isMini ? 'rgba(0, 215, 255, 0.5)' : 'rgba(0, 215, 255, 0.65)');
+        e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.3)';
       }}
     >
       {label}
     </button>
   );
 };
+
 export default NoteMarker;

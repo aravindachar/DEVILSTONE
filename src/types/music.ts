@@ -13,7 +13,38 @@ export type ScaleType =
   | 'Mixolydian'
   | 'Phrygian'
   | 'Lydian'
-  | 'Locrian';
+  | 'Locrian'
+  // Harmonic minor modes
+  | 'Locrian 13 or Locrian 6 (Half diminished)'
+  | 'Ionian #5 (Augmented)'
+  | 'Dorian #4 (Ukrainian dorian)'
+  | 'Phrygian dominant'
+  | 'Lydian #2'
+  | 'Super Locrian bb7 (Diminished)'
+  // Bebop
+  | 'Dominant (Mixolydian) bebop'
+  | 'Major bebop'
+  // Whole tone / Diminished
+  | 'Whole tone ext.'
+  | 'Half Whole diminished'
+  | 'Half Whole diminished ext'
+  | 'Whole Half diminished'
+  | 'Whole Half diminished ext.'
+  // 6th Chords
+  | 'Minor 6th'
+  | 'Major 6th'
+  | '6Add9'
+  | 'Minor 6 Add9'
+  // 7th Chords
+  | 'Major 7th'
+  | 'Minor 7th'
+  | 'Dominant 7th'
+  | 'Half diminished 7th'
+  | 'Diminished 7th'
+  | '7sus4'
+  // 9th Chords
+  | 'Major 9th'
+  | 'Minor 9th';
 
 export type TuningType =
   | 'Standard (E)'

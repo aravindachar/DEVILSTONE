@@ -58,8 +58,8 @@ export const Fretboard: React.FC<FretboardProps> = ({
   const fretboardStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#111827', // Obsidian dark fretboard backing for contrast
-    borderLeft: startFret === 0 ? `14px solid #000000` : 'none', // Solid black Nut
+    backgroundColor: '#FAF9F6', // Refined Maple neck backing
+    borderLeft: startFret === 0 ? `14px solid #1E293B` : 'none', // Dark bone Nut
     padding: isMini ? '8px 0' : '16px 0',
     borderRadius: isMini ? '8px' : '16px',
     minWidth: isMini ? 'auto' : '1280px',
@@ -81,7 +81,7 @@ export const Fretboard: React.FC<FretboardProps> = ({
     return {
       flex: 1,
       textAlign: 'center',
-      color: '#4B5563', // High contrast secondary text gray
+      color: '#94A3B8', // High contrast secondary slate
       fontSize: isMini ? '9px' : '11px',
       fontWeight: 700,
       fontFamily: THEME.fonts.tech,
@@ -98,9 +98,9 @@ export const Fretboard: React.FC<FretboardProps> = ({
   return (
     <div 
       style={fretboardContainerStyle}
-      className={isMini ? undefined : "glass-panel"}
+      className={isMini ? "fretboard-wrapper" : "glass-panel fretboard-wrapper"}
     >
-      <div style={fretboardStyle}>
+      <div className="fretboard-inner-wrapper" style={fretboardStyle}>
         {reversedTuning.map((openNote, reversedIdx) => {
           const originalStringIdx = currentTuningNotes.length - 1 - reversedIdx;
 
@@ -156,9 +156,15 @@ export const Fretboard: React.FC<FretboardProps> = ({
         <div style={markersRowStyle}>
           {Array.from({ length: MAX_FRETS + 1 }, (_, i) => {
             if (i < startFret || i > endFret) return null;
+            const isSingle = [3, 5, 7, 9, 15, 17, 19, 21].includes(i);
+            const isDouble = i === 12 || i === 24;
+
             return (
               <div key={i} style={markerStyle(i)}>
-                {i === 0 ? 'Nut' : i}
+                <div>{i === 0 ? 'Nut' : i}</div>
+                <div style={{ fontSize: '14px', lineHeight: '1', marginTop: '2px', color: '#94A3B8', height: '14px' }}>
+                  {isSingle ? '•' : isDouble ? '••' : ' '}
+                </div>
               </div>
             );
           })}

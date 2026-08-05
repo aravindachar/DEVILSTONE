@@ -1,47 +1,36 @@
-# DEVILSTONE Vercel & TypeScript Compile Fixes Walkthrough
+# DEVILSTONE Professional Visual Refinement Walkthrough
 
-We resolved the TypeScript type resolution and Prisma compilation issues encountered during Vercel builds.
-
----
-
-## 1. Resolved Issues
-
-### ✦ Issue 1: Missing `PrismaClient` Export from `@prisma/client`
-- **Cause:** When building on Vercel, dependency installation (`npm install`) finishes but standard Next.js compilation runs *before* the Prisma Client types are compiled. Because Prisma Client generates files inside `node_modules/@prisma/client` on-the-fly, the stub is loaded without any exported types, causing typescript errors.
-- **Solution:** Added a `"postinstall": "prisma generate"` script hook inside `package.json`. This forces Vercel to compile client definitions immediately after package installation is finished, ensuring `@prisma/client` types are available during TypeScript type checking.
-
-### ✦ Issue 2: Parameter `session`, `sub`, and `s` Implicit `any` Typings
-- **Cause:** Complex prisma `.findMany` nested selections fail to automatically resolve type parameters under strict TS mode.
-- **Solution:** Declared the interface type structure `SessionWithSubtopics` representing the query structure:
-  ```typescript
-  type SessionWithSubtopics = {
-    id: string;
-    title: string;
-    subtopics: {
-      id: string;
-      title: string;
-      contentHtml: string;
-      progress: {
-        isCompleted: boolean;
-      }[];
-    }[];
-  };
-  ```
-  Explicitly typed all map parameters (`session`, `sub`, `s`) within the REST API formatted response builder (`src/app/api/sessions/route.ts`).
-
-### ✦ Issue 3: Global Namespace Casting in `db.ts`
-- **Cause:** Casting `global` directly to database instances leads to warnings on hot-reloading.
-- **Solution:** Refactored `src/lib/db.ts` to declare `global.prisma` under the standard global typescript namespace layout:
-  ```typescript
-  declare global {
-    var prisma: PrismaClient | undefined;
-  }
-  ```
+We applied world-class designer styling refinements (following Apple, Linear, and Raycast principles) to DEVILSTONE.
 
 ---
 
-## 2. Compilation Results
-- **Command:** `npm run build`
-- **Status:** **PASSED (Exit Code 0)**
-- **Prisma CLI Generation:** Successful (Post-migration check completes without errors).
-- **TypeScript Checking:** Resolved with 0 warnings and 0 type errors.
+## 1. Color System Refinement
+- **Deep Navy Base (#0B1020):** Replaced the general dark background with a deep navy tone.
+- **Surface Layering (#121827):** Converted floating glass cards to translucent surface panels (`rgba(18, 24, 39, 0.65)`).
+- **Primary Accent (Electric Cyan #00D7FF):** Used for micro-details, beat indicators, and active accents.
+- **Desaturated Coral Red (#EF4444):** Used for root markers and metronome stop buttons.
+- **Ambient Environmental Lights:**
+  - Electric Cyan (`blob-cyan`) at `0.12` opacity.
+  - Soft Purple (`blob-purple`) at `0.08` opacity.
+  - Warm Amber (`blob-amber`) spotlight directly behind the Hero area at `0.12` opacity.
+
+---
+
+## 2. Layout & Breathing Room
+- **Whitespace Gaps:** Increased the spacing between sections by 30% (marginTop values set to 140px/160px/180px).
+- **Hero Breathing Room:** Expanded hero padding to `130px 20px 140px 20px` to let the design breathe.
+- **Fretboard Spotlight:** Emphasized the fretboard layout by reducing visual weights on control panels and secondary text elements.
+
+---
+
+## 3. Dropdowns, Sliders & Controls
+- **Soft Off-White Text (#F4F4F2):** Replaced stark white labels/inputs.
+- **Consistent Corner Radii:** All selects, card containers, and sliders now use consistent `8px` to `12px` corner rounding.
+- **Track Styling:** Redesigned inputs with dark borders (`rgba(255,255,255,0.08)`) and custom desaturated range tracks.
+
+---
+
+## 4. UI Buttons System
+- **Pill to Rounded Rects:** Swapped pill shapes for clean `8px` rounded rectangles.
+- **Secondary Actions:** Styled secondary buttons to recede using low-opacity gray text and translucent backgrounds.
+- **Translucent Tints:** Used `rgba(0, 215, 255, 0.05)` and `rgba(239, 68, 68, 0.06)` for desaturated cyan/danger buttons.

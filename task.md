@@ -1,7 +1,7 @@
-# Footer & About Section Checklist
+# Button & Note Refactoring Checklist
 
-- [x] Add "About" link to navbar in `src/app/page.tsx`
-- [x] Build the dynamic, professional About section card in `src/app/page.tsx`
-- [x] Build the polished, copyright-backed Footer in `src/app/page.tsx`
-- [x] Run production build compilation to verify layout
+- [x] Create implementation plan
+- [x] Refactor button themes in `src/components/UI/Button.tsx`
+- [x] Redesign fretboard notes in `src/components/Fretboard/NoteMarker.tsx` as dark glass discs with glowing neon rims
+- [x] Verify build compilation
 - [x] Restart dev server at port 3001

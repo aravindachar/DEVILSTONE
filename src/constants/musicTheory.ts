@@ -22,6 +22,37 @@ export const SCALES: Record<ScaleType, number[]> = {
   'Phrygian': [0, 1, 3, 5, 7, 8, 10],
   'Lydian': [0, 2, 4, 6, 7, 9, 11],
   'Locrian': [0, 1, 3, 5, 6, 8, 10],
+  // Harmonic minor modes
+  'Locrian 13 or Locrian 6 (Half diminished)': [0, 1, 3, 5, 6, 9, 10],
+  'Ionian #5 (Augmented)': [0, 2, 4, 5, 8, 9, 11],
+  'Dorian #4 (Ukrainian dorian)': [0, 2, 3, 6, 7, 9, 10],
+  'Phrygian dominant': [0, 1, 4, 5, 7, 8, 10],
+  'Lydian #2': [0, 3, 4, 6, 7, 9, 11],
+  'Super Locrian bb7 (Diminished)': [0, 1, 3, 4, 6, 8, 9],
+  // Bebop
+  'Dominant (Mixolydian) bebop': [0, 2, 4, 5, 7, 9, 10, 11],
+  'Major bebop': [0, 2, 4, 5, 7, 8, 9, 11],
+  // Whole tone / Diminished
+  'Whole tone ext.': [0, 2, 4, 6, 8, 10],
+  'Half Whole diminished': [0, 1, 3, 4, 6, 7, 9, 10],
+  'Half Whole diminished ext': [0, 1, 2, 3, 4, 6, 7, 9, 10],
+  'Whole Half diminished': [0, 2, 3, 5, 6, 8, 9, 11],
+  'Whole Half diminished ext.': [0, 2, 3, 5, 6, 8, 9, 11],
+  // 6th Chords
+  'Minor 6th': [0, 3, 7, 9],
+  'Major 6th': [0, 4, 7, 9],
+  '6Add9': [0, 2, 4, 7, 9],
+  'Minor 6 Add9': [0, 2, 3, 7, 9],
+  // 7th Chords
+  'Major 7th': [0, 4, 7, 11],
+  'Minor 7th': [0, 3, 7, 10],
+  'Dominant 7th': [0, 4, 7, 10],
+  'Half diminished 7th': [0, 3, 6, 10],
+  'Diminished 7th': [0, 3, 6, 9],
+  '7sus4': [0, 5, 7, 10],
+  // 9th Chords
+  'Major 9th': [0, 2, 4, 7, 11],
+  'Minor 9th': [0, 2, 3, 7, 10],
 };
 
 export const INTERVAL_MAP: Record<number, string> = {
