@@ -2,7 +2,7 @@
 
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState } from 'react';
-import type { NoteName, ScaleType, TuningType, CagedShape, DisplayMode, MetronomeAccent } from '../types/music';
+import type { NoteName, ScaleType, TuningType, CagedShape, DisplayMode, MetronomeAccent, InstrumentType } from '../types/music';
 import { useAudioContext } from '../hooks/useAudioContext';
 import { useMetronome } from '../hooks/useMetronome';
 import { useFretboard } from '../hooks/useFretboard';
@@ -20,6 +20,12 @@ interface AppContextType {
   cagedShape: CagedShape;
   setCagedShape: (c: CagedShape) => void;
   
+  // Instrument and Fret Range selectors
+  instrument: InstrumentType;
+  setInstrument: (i: InstrumentType) => void;
+  fretRange: [number, number];
+  setFretRange: (range: [number, number]) => void;
+
   // Global Metronome States
   bpm: number;
   setBpm: (bpm: number) => void;
@@ -61,12 +67,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [displayMode, setDisplayMode] = useState<DisplayMode>('notes');
   const [cagedShape, setCagedShape] = useState<CagedShape>('None');
 
+  // Instrument and Fret Range
+  const [instrument, setInstrumentState] = useState<InstrumentType>('guitar');
+  const [fretRange, setFretRange] = useState<[number, number]>([0, 24]);
+
   // Metronome Config
   const [bpm, setBpm] = useState<number>(100);
   const [accentPattern, setAccentPattern] = useState<MetronomeAccent>('first');
   const [subdivision, setSubdivision] = useState<1 | 2>(1);
   const [swing, setSwing] = useState<number>(50);
   const [isFocusMode, setIsFocusMode] = useState<boolean>(false);
+
+  const setInstrument = (i: InstrumentType) => {
+    setInstrumentState(i);
+    if (i === 'bass') {
+      setSelectedTuning('Standard Bass (E)');
+    } else {
+      setSelectedTuning('Standard (E)');
+    }
+  };
 
   const metronome = useMetronome({
     getAudioContext,
@@ -84,31 +103,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     cagedShape,
   });
 
-  // Override set functions in useFretboard to match global state
-  // We sync context state directly with useFretboard hook configuration by passing state properties.
-  // Actually, useFretboard will pull standard values from state inside this context.
-  // Let's pass local states to fretboard in its configuration.
-  // Wait! In the current useFretboard implementation, it has its own state inside.
-  // Let's modify useFretboard hook return to accept and mirror context state!
-  // Oh, wait! It's much simpler: we can just adapt useFretboard.ts to let the Context handle the state,
-  // or useFretboard can take selectedKey, selectedScale, selectedTuning, cagedShape, displayMode as parameters!
-  // Yes! If we pass these state variables as props/parameters to useFretboard, then useFretboard will only handle the arpeggiation/play logic, which is much cleaner and eliminates duplicate state!
-  // Let's check:
-  // In `useFretboard.ts`, it maintains local key, scale, etc.
-  // If we change `useFretboardProps` to:
-  // ```typescript
-  // interface UseFretboardProps {
-  //   getAudioContext: () => AudioContext;
-  //   selectedKey: NoteName;
-  //   selectedScale: ScaleType;
-  //   selectedTuning: TuningType;
-  //   displayMode: DisplayMode;
-  //   cagedShape: CagedShape;
-  // }
-  // ```
-  // Then we can manage state inside AppContext, and pass them to useFretboard!
-  // This is beautiful!
-  
   return (
     <AppContext.Provider
       value={{
@@ -122,6 +116,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setDisplayMode,
         cagedShape,
         setCagedShape,
+        
+        instrument,
+        setInstrument,
+        fretRange,
+        setFretRange,
+        
         bpm,
         setBpm,
         accentPattern,

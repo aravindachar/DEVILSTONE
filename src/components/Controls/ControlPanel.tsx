@@ -25,6 +25,10 @@ export const ControlPanel: React.FC = () => {
     strum,
     isFocusMode,
     setIsFocusMode,
+    instrument,
+    setInstrument,
+    fretRange,
+    setFretRange,
   } = useApp();
 
   const panelStyle: React.CSSProperties = {
@@ -51,6 +55,19 @@ export const ControlPanel: React.FC = () => {
     { value: 'E', label: 'E Shape Chord' },
     { value: 'D', label: 'D Shape Chord' },
   ];
+
+  const handleRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value;
+    if (val === '0-12') setFretRange([0, 12]);
+    else if (val === '12-24') setFretRange([12, 24]);
+    else setFretRange([0, 24]);
+  };
+
+  const getRangeValue = (): string => {
+    if (fretRange[0] === 0 && fretRange[1] === 12) return '0-12';
+    if (fretRange[0] === 12 && fretRange[1] === 24) return '12-24';
+    return '0-24';
+  };
 
   const exportFretboardImage = () => {
     const node = document.querySelector('.fretboard-inner-wrapper');
@@ -81,6 +98,18 @@ export const ControlPanel: React.FC = () => {
       style={panelStyle}
       className="glass-panel"
     >
+      {/* Instrument Select */}
+      <Dropdown
+        label="Instrument"
+        value={instrument}
+        onChange={(e) => setInstrument(e.target.value as 'guitar' | 'bass')}
+        options={[
+          { value: 'guitar', label: 'Guitar (6-Str)' },
+          { value: 'bass', label: 'Bass (4/5-Str)' },
+        ]}
+        style={{ minWidth: '125px' }}
+      />
+
       <TuningSelect value={selectedTuning} onChange={setSelectedTuning} />
 
       <div style={{ display: 'flex', gap: '10px' }}>
@@ -100,6 +129,19 @@ export const ControlPanel: React.FC = () => {
         onChange={(e) => setDisplayMode(e.target.value as DisplayMode)}
         options={modeOptions}
         style={{ minWidth: '180px' }}
+      />
+
+      {/* Fret Range Select */}
+      <Dropdown
+        label="Fret Range"
+        value={getRangeValue()}
+        onChange={handleRangeChange}
+        options={[
+          { value: '0-24', label: 'Full Fretboard (0 - 24)' },
+          { value: '0-12', label: 'Lower Register (0 - 12)' },
+          { value: '12-24', label: 'Higher Register (12 - 24)' },
+        ]}
+        style={{ minWidth: '185px' }}
       />
 
       <Dropdown

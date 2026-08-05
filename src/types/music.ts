@@ -52,7 +52,14 @@ export type TuningType =
   | 'DADGAD'
   | 'Open G'
   | 'Half Step Down'
-  | 'Full Step Down';
+  | 'Full Step Down'
+  // Bass Tunings
+  | 'Standard Bass (E)'
+  | 'Drop D Bass'
+  | '5-String Bass (B)'
+  | 'Half Step Down Bass';
+
+export type InstrumentType = 'guitar' | 'bass';
 
 export type CagedShape = 'None' | 'C' | 'A' | 'G' | 'E' | 'D';
 

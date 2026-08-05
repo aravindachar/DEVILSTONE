@@ -2,6 +2,7 @@ import React from 'react';
 import type { TuningType } from '../../types/music';
 import { TUNING_PRESETS } from '../../constants/musicTheory';
 import { Dropdown } from '../UI/Dropdown';
+import { useApp } from '../../context/AppContext';
 
 interface TuningSelectProps {
   value: TuningType;
@@ -9,7 +10,15 @@ interface TuningSelectProps {
 }
 
 export const TuningSelect: React.FC<TuningSelectProps> = ({ value, onChange }) => {
-  const options = Object.keys(TUNING_PRESETS).map((tuning) => ({
+  const { instrument } = useApp();
+
+  // Filter presets dynamically based on selected instrument
+  const filteredTuningNames = Object.keys(TUNING_PRESETS).filter((tuningName) => {
+    const isBassTuning = tuningName.includes('Bass');
+    return instrument === 'bass' ? isBassTuning : !isBassTuning;
+  });
+
+  const options = filteredTuningNames.map((tuning) => ({
     value: tuning,
     label: tuning,
   }));
@@ -23,4 +32,5 @@ export const TuningSelect: React.FC<TuningSelectProps> = ({ value, onChange }) =
     />
   );
 };
+
 export default TuningSelect;

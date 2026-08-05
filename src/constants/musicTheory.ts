@@ -7,6 +7,11 @@ export const TUNING_PRESETS: Record<TuningType, string[]> = {
   'Open G': ['D2', 'G2', 'D3', 'G3', 'B3', 'D4'],
   'Half Step Down': ['D#2', 'G#2', 'C#3', 'F#3', 'A#3', 'D#4'],
   'Full Step Down': ['D2', 'G2', 'C3', 'F3', 'A3', 'D4'],
+  // Bass Presets
+  'Standard Bass (E)': ['E1', 'A1', 'D2', 'G2'],
+  'Drop D Bass': ['D1', 'A1', 'D2', 'G2'],
+  '5-String Bass (B)': ['B0', 'E1', 'A1', 'D2', 'G2'],
+  'Half Step Down Bass': ['D#1', 'G#1', 'C#2', 'F#2'],
 };
 
 export const SCALES: Record<ScaleType, number[]> = {

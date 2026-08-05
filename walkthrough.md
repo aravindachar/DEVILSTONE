@@ -1,36 +1,19 @@
-# DEVILSTONE Professional Visual Refinement Walkthrough
+# DEVILSTONE Fretboard Sizing & Bass Guitar Walkthrough
 
-We applied world-class designer styling refinements (following Apple, Linear, and Raycast principles) to DEVILSTONE.
-
----
-
-## 1. Color System Refinement
-- **Deep Navy Base (#0B1020):** Replaced the general dark background with a deep navy tone.
-- **Surface Layering (#121827):** Converted floating glass cards to translucent surface panels (`rgba(18, 24, 39, 0.65)`).
-- **Primary Accent (Electric Cyan #00D7FF):** Used for micro-details, beat indicators, and active accents.
-- **Desaturated Coral Red (#EF4444):** Used for root markers and metronome stop buttons.
-- **Ambient Environmental Lights:**
-  - Electric Cyan (`blob-cyan`) at `0.12` opacity.
-  - Soft Purple (`blob-purple`) at `0.08` opacity.
-  - Warm Amber (`blob-amber`) spotlight directly behind the Hero area at `0.12` opacity.
+We added global selection parameters to swap between guitar and bass formats and visualize specific fretboard register segments.
 
 ---
 
-## 2. Layout & Breathing Room
-- **Whitespace Gaps:** Increased the spacing between sections by 30% (marginTop values set to 140px/160px/180px).
-- **Hero Breathing Room:** Expanded hero padding to `130px 20px 140px 20px` to let the design breathe.
-- **Fretboard Spotlight:** Emphasized the fretboard layout by reducing visual weights on control panels and secondary text elements.
+## 1. Bass Guitar Support
+- **Instrument Switcher:** Added a dropdown selector inside `ControlPanel.tsx` to toggle between standard 6-string Guitar and 4/5-string Bass.
+- **Tuning Select Filtering:** Switching the instrument to Bass automatically filters the tuning options to bass-specific presets (Standard Bass E, Drop D Bass, 5-String Bass B, and Half Step Down Bass) and dynamically reduces the rendered fretboard string count.
+- **Deep Plucking Tones:** The audio plucker synthesizes notes down to octave 1 (`E1` = 41.2Hz) and octave 0 (`B0` = 30.87Hz) for a deep, authentic bass tone.
 
 ---
 
-## 3. Dropdowns, Sliders & Controls
-- **Soft Off-White Text (#F4F4F2):** Replaced stark white labels/inputs.
-- **Consistent Corner Radii:** All selects, card containers, and sliders now use consistent `8px` to `12px` corner rounding.
-- **Track Styling:** Redesigned inputs with dark borders (`rgba(255,255,255,0.08)`) and custom desaturated range tracks.
-
----
-
-## 4. UI Buttons System
-- **Pill to Rounded Rects:** Swapped pill shapes for clean `8px` rounded rectangles.
-- **Secondary Actions:** Styled secondary buttons to recede using low-opacity gray text and translucent backgrounds.
-- **Translucent Tints:** Used `rgba(0, 215, 255, 0.05)` and `rgba(239, 68, 68, 0.06)` for desaturated cyan/danger buttons.
+## 2. Segmented Fret Ranges
+- **Register Selector:** Added a dropdown selector in `ControlPanel.tsx` to choose visible fret windows:
+  - **Full Fretboard:** Frets 0 to 24.
+  - **Lower Register:** Frets 0 to 12.
+  - **Higher Register:** Frets 12 to 24.
+- **Calculated Neck Proportions:** Updated `Fretboard.tsx` to dynamically calculate the physical width of the neck based on the visible fret count (e.g. contracting it to `585px` for 12 frets). This prevents cells from stretching awkwardly and maintains realistic neck proportions.

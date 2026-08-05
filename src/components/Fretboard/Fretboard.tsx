@@ -24,7 +24,7 @@ interface FretboardProps {
 const MAX_FRETS = 24;
 
 export const Fretboard: React.FC<FretboardProps> = ({
-  fretRange = [0, MAX_FRETS],
+  fretRange,
   cagedHighlight,
   isMini = false,
   ...props
@@ -40,7 +40,10 @@ export const Fretboard: React.FC<FretboardProps> = ({
   const isMinor = props.isMinor ?? global.isMinor;
   const onPlayNote = props.onPlayNote ?? global.playFretNote;
 
-  const [startFret, endFret] = fretRange;
+  const [startFret, endFret] = fretRange ?? global.fretRange ?? [0, MAX_FRETS];
+  
+  const visibleFretsCount = endFret - startFret + 1;
+  const calculatedWidth = visibleFretsCount * (isMini ? 32 : 45) + (startFret === 0 ? (isMini ? 40 : 55) : 0);
 
   const fretboardContainerStyle: React.CSSProperties = {
     overflowX: 'auto',
@@ -59,10 +62,10 @@ export const Fretboard: React.FC<FretboardProps> = ({
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#FAF9F6', // Refined Maple neck backing
-    borderLeft: startFret === 0 ? `14px solid #1E293B` : 'none', // Dark bone Nut
+    borderLeft: startFret === 0 ? `14px solid #1E293B` : `3px solid ${THEME.colors.fretLine}`, // Dark bone Nut or standard fret wire closure
     padding: isMini ? '8px 0' : '16px 0',
     borderRadius: isMini ? '8px' : '16px',
-    minWidth: isMini ? 'auto' : '1280px',
+    minWidth: isMini ? 'auto' : `${calculatedWidth}px`,
     position: 'relative',
     borderTop: `1px solid rgba(255, 255, 255, 0.05)`,
     borderRight: `1px solid rgba(255, 255, 255, 0.05)`,
@@ -72,18 +75,18 @@ export const Fretboard: React.FC<FretboardProps> = ({
 
   const markersRowStyle: React.CSSProperties = {
     display: 'flex',
-    marginTop: isMini ? '6px' : '12px',
-    minWidth: isMini ? 'auto' : '1280px',
-    paddingLeft: startFret === 0 ? '14px' : '0', // align with nut offset
+    marginBottom: isMini ? '4px' : '6px', // snugger space below numbers (closer to High E string)
+    minWidth: isMini ? 'auto' : `${calculatedWidth}px`,
+    paddingLeft: '0', // Align perfectly with fret cells
   };
 
   const markerStyle = (fretIdx: number): React.CSSProperties => {
     return {
       flex: 1,
       textAlign: 'center',
-      color: '#94A3B8', // High contrast secondary slate
-      fontSize: isMini ? '9px' : '11px',
-      fontWeight: 700,
+      color: '#1E293B', // High-contrast dark slate for visibility on light maple wood
+      fontSize: isMini ? '9px' : '12px',
+      fontWeight: 800, // Extra Bold
       fontFamily: THEME.fonts.tech,
       textTransform: 'uppercase',
       minWidth: isMini 
@@ -101,6 +104,19 @@ export const Fretboard: React.FC<FretboardProps> = ({
       className={isMini ? "fretboard-wrapper" : "glass-panel fretboard-wrapper"}
     >
       <div className="fretboard-inner-wrapper" style={fretboardStyle}>
+        {/* Fret numbering markers row (Shifted to top) */}
+        <div style={markersRowStyle}>
+          {Array.from({ length: MAX_FRETS + 1 }, (_, i) => {
+            if (i < startFret || i > endFret) return null;
+
+            return (
+              <div key={i} style={markerStyle(i)}>
+                <div>{i === 0 ? 'Nut' : i}</div>
+              </div>
+            );
+          })}
+        </div>
+
         {reversedTuning.map((openNote, reversedIdx) => {
           const originalStringIdx = currentTuningNotes.length - 1 - reversedIdx;
 
@@ -117,7 +133,6 @@ export const Fretboard: React.FC<FretboardProps> = ({
                 const isRoot = noteName === selectedKey;
                 const offset = getIntervalOffset(noteName, selectedKey);
                 const isChordTone = isTriadNote(offset, isMinor);
-
                 const inCagedZone = isFretInCagedShape(
                   fretIdx,
                   selectedKey,
@@ -151,24 +166,6 @@ export const Fretboard: React.FC<FretboardProps> = ({
             </StringRow>
           );
         })}
-
-        {/* Fret numbering markers row */}
-        <div style={markersRowStyle}>
-          {Array.from({ length: MAX_FRETS + 1 }, (_, i) => {
-            if (i < startFret || i > endFret) return null;
-            const isSingle = [3, 5, 7, 9, 15, 17, 19, 21].includes(i);
-            const isDouble = i === 12 || i === 24;
-
-            return (
-              <div key={i} style={markerStyle(i)}>
-                <div>{i === 0 ? 'Nut' : i}</div>
-                <div style={{ fontSize: '14px', lineHeight: '1', marginTop: '2px', color: '#94A3B8', height: '14px' }}>
-                  {isSingle ? '•' : isDouble ? '••' : ' '}
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </div>
     </div>
   );

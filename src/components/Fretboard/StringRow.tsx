@@ -1,5 +1,6 @@
 import React from 'react';
 import { THEME } from '../../constants/theme';
+import { useApp } from '../../context/AppContext';
 
 interface StringRowProps {
   stringIdx: number;
@@ -8,10 +9,19 @@ interface StringRowProps {
 }
 
 export const StringRow: React.FC<StringRowProps> = ({ stringIdx, children, isMini = false }) => {
-  // Gauge calculation: string index 0 (high E) is thinnest, 5 (low E) is thickest
-  const stringGauge = isMini 
-    ? (stringIdx * 0.3 + 0.8)
-    : (stringIdx * 0.45 + 1.2);
+  const { currentTuningNotes, instrument } = useApp();
+  const numStrings = currentTuningNotes.length;
+
+  // Invert the index so stringIdx 0 (Low string / lowest pitch) is thickest,
+  // and stringIdx (numStrings - 1) (High string / highest pitch) is thinnest.
+  const gaugeIdx = numStrings - 1 - stringIdx;
+
+  // Apply higher gauges for Bass strings to feel authentic
+  const isBass = instrument === 'bass';
+  const multiplier = isBass ? 0.75 : 0.45;
+  const baseSize = isBass ? (isMini ? 1.4 : 2.0) : (isMini ? 0.8 : 1.2);
+
+  const stringGauge = gaugeIdx * multiplier + baseSize;
 
   const rowStyle: React.CSSProperties = {
     display: 'flex',
@@ -38,4 +48,5 @@ export const StringRow: React.FC<StringRowProps> = ({ stringIdx, children, isMin
     </div>
   );
 };
+
 export default StringRow;
