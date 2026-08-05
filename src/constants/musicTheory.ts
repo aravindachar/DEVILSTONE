@@ -11,6 +11,7 @@ export const TUNING_PRESETS: Record<TuningType, string[]> = {
   'Standard Bass (E)': ['E1', 'A1', 'D2', 'G2'],
   'Drop D Bass': ['D1', 'A1', 'D2', 'G2'],
   '5-String Bass (B)': ['B0', 'E1', 'A1', 'D2', 'G2'],
+  '5-String Bass (Drop A)': ['A0', 'E1', 'A1', 'D2', 'G2'],
   'Half Step Down Bass': ['D#1', 'G#1', 'C#2', 'F#2'],
 };
 

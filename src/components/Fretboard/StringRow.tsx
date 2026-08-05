@@ -17,7 +17,7 @@ export const StringRow: React.FC<StringRowProps> = ({ stringIdx, children, isMin
   const gaugeIdx = numStrings - 1 - stringIdx;
 
   // Apply higher gauges for Bass strings to feel authentic
-  const isBass = instrument === 'bass';
+  const isBass = instrument === 'bass-4' || instrument === 'bass-5';
   const multiplier = isBass ? 0.75 : 0.45;
   const baseSize = isBass ? (isMini ? 1.4 : 2.0) : (isMini ? 0.8 : 1.2);
 

@@ -14,8 +14,14 @@ export const TuningSelect: React.FC<TuningSelectProps> = ({ value, onChange }) =
 
   // Filter presets dynamically based on selected instrument
   const filteredTuningNames = Object.keys(TUNING_PRESETS).filter((tuningName) => {
-    const isBassTuning = tuningName.includes('Bass');
-    return instrument === 'bass' ? isBassTuning : !isBassTuning;
+    if (instrument === 'bass-5') {
+      return tuningName.includes('5-String Bass');
+    }
+    if (instrument === 'bass-4') {
+      return tuningName.includes('Bass') && !tuningName.includes('5-String Bass');
+    }
+    // Guitar
+    return !tuningName.includes('Bass');
   });
 
   const options = filteredTuningNames.map((tuning) => ({

@@ -57,9 +57,10 @@ export type TuningType =
   | 'Standard Bass (E)'
   | 'Drop D Bass'
   | '5-String Bass (B)'
+  | '5-String Bass (Drop A)'
   | 'Half Step Down Bass';
 
-export type InstrumentType = 'guitar' | 'bass';
+export type InstrumentType = 'guitar' | 'bass-4' | 'bass-5';
 
 export type CagedShape = 'None' | 'C' | 'A' | 'G' | 'E' | 'D';
 

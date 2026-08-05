@@ -102,12 +102,13 @@ export const ControlPanel: React.FC = () => {
       <Dropdown
         label="Instrument"
         value={instrument}
-        onChange={(e) => setInstrument(e.target.value as 'guitar' | 'bass')}
+        onChange={(e) => setInstrument(e.target.value as 'guitar' | 'bass-4' | 'bass-5')}
         options={[
           { value: 'guitar', label: 'Guitar (6-Str)' },
-          { value: 'bass', label: 'Bass (4/5-Str)' },
+          { value: 'bass-4', label: 'Bass (4-Str)' },
+          { value: 'bass-5', label: 'Bass (5-Str)' },
         ]}
-        style={{ minWidth: '125px' }}
+        style={{ minWidth: '135px' }}
       />
 
       <TuningSelect value={selectedTuning} onChange={setSelectedTuning} />

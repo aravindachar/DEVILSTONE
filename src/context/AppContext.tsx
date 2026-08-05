@@ -80,7 +80,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const setInstrument = (i: InstrumentType) => {
     setInstrumentState(i);
-    if (i === 'bass') {
+    if (i === 'bass-5') {
+      setSelectedTuning('5-String Bass (B)');
+    } else if (i === 'bass-4') {
       setSelectedTuning('Standard Bass (E)');
     } else {
       setSelectedTuning('Standard (E)');
