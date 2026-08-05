@@ -1,7 +1,7 @@
-# Vercel Database Seeding Checklist
+# Footer & About Section Checklist
 
-- [x] Configure `"build": "prisma migrate deploy && node prisma/seed.js && next build"` in `package.json` to migrate and seed during the Vercel build container step
-- [x] Update `prisma.config.ts` to fallback to `"file:./dev.db"` if `DATABASE_URL` is not set in Vercel environment variables
-- [x] Verify production compilation and database seeding runs successfully
-- [x] Verify local server is active on port 3001
-- [x] Update walkthrough report
+- [x] Add "About" link to navbar in `src/app/page.tsx`
+- [x] Build the dynamic, professional About section card in `src/app/page.tsx`
+- [x] Build the polished, copyright-backed Footer in `src/app/page.tsx`
+- [x] Run production build compilation to verify layout
+- [x] Restart dev server at port 3001

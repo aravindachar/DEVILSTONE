@@ -35,7 +35,7 @@ function DevilstoneContent() {
     borderRadius: '100px',
     border: '1px solid rgba(255, 255, 255, 0.4)',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.6)',
-    maxWidth: '520px',
+    maxWidth: '560px',
     width: '100%',
     margin: '24px auto 0 auto',
     position: 'sticky',
@@ -134,6 +134,7 @@ function DevilstoneContent() {
         <ul style={navLinksStyle}>
           <li><a href="#fretboard" style={navLinkItemStyle}>Console</a></li>
           <li><a href="#shapes" style={navLinkItemStyle}>Shapes</a></li>
+          <li><a href="#about" style={navLinkItemStyle}>About</a></li>
           <li><Link href="/academy" style={navLinkItemStyle}>Academy</Link></li>
         </ul>
         <button 
@@ -185,6 +186,101 @@ function DevilstoneContent() {
       <div id="grimoire" style={{ scrollMarginTop: '80px' }}>
         <TheoryGrimoire />
       </div>
+
+      {/* Tier 4: About Section */}
+      <div id="about" style={{ scrollMarginTop: '80px', marginTop: '80px' }}>
+        <div className="glass-panel" style={{ padding: '60px 45px', maxWidth: '1200px', margin: '0 auto', boxSizing: 'border-box' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[60px] items-center">
+            <div>
+              <span style={{ fontSize: '12px', fontWeight: 700, color: '#008170', letterSpacing: '1.5px', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>THE PHILOSOPHY</span>
+              <h2 style={{ fontSize: '36px', fontWeight: 800, color: '#111111', lineHeight: '1.2', marginBottom: '20px', letterSpacing: '-0.8px' }}>
+                Bridging Music Theory and Physical Intuition.
+              </h2>
+              <p style={{ fontSize: '15px', color: '#666666', lineHeight: '1.7', marginBottom: '24px' }}>
+                DEVILSTONE is an advanced guitar visualization console. Designed for serious students and professional guitarists alike, the platform translates abstract chord structures, scale relations, and CAGED patterns into immediate, geometric layouts.
+              </p>
+              <p style={{ fontSize: '15px', color: '#666666', lineHeight: '1.7' }}>
+                By isolating fingerboard patterns and syncing them with an audio-backed rhythm metronome, we build muscular and auditory memory maps simultaneously. Built on top of the comprehensive Gibson guitar curriculum.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div style={{ padding: '24px', background: 'rgba(255, 255, 255, 0.4)', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.5)' }}>
+                <div style={{ fontSize: '20px', marginBottom: '10px' }}>🎸</div>
+                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111111', marginBottom: '8px' }}>Active Fretboard</h4>
+                <p style={{ fontSize: '13px', color: '#666666', lineHeight: '1.5', margin: 0 }}>
+                  Interact with a 24-fret digital neck configured with customizable tunings and scale mappings.
+                </p>
+              </div>
+              <div style={{ padding: '24px', background: 'rgba(255, 255, 255, 0.4)', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.5)' }}>
+                <div style={{ fontSize: '20px', marginBottom: '10px' }}>⚡</div>
+                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111111', marginBottom: '8px' }}>Pattern Isolation</h4>
+                <p style={{ fontSize: '13px', color: '#666666', lineHeight: '1.5', margin: 0 }}>
+                  Master Pentatonic shapes and CAGED systems with visual highlighted fingerboard overlays.
+                </p>
+              </div>
+              <div style={{ padding: '24px', background: 'rgba(255, 255, 255, 0.4)', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.5)' }}>
+                <div style={{ fontSize: '20px', marginBottom: '10px' }}>⏱️</div>
+                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111111', marginBottom: '8px' }}>Metronome Sync</h4>
+                <p style={{ fontSize: '13px', color: '#666666', lineHeight: '1.5', margin: 0 }}>
+                  Practice in time with a high-accuracy, Web Audio-scheduled metronome sequencer.
+                </p>
+              </div>
+              <div style={{ padding: '24px', background: 'rgba(255, 255, 255, 0.4)', borderRadius: '20px', border: '1px solid rgba(255, 255, 255, 0.5)' }}>
+                <div style={{ fontSize: '20px', marginBottom: '10px' }}>🎓</div>
+                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#111111', marginBottom: '8px' }}>Academy LMS</h4>
+                <p style={{ fontSize: '13px', color: '#666666', lineHeight: '1.5', margin: 0 }}>
+                  Step-by-step progress tracking for all 20 lessons of the structured guitar curriculum.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Section */}
+      <footer style={{ marginTop: '120px', borderTop: '1px solid rgba(0, 0, 0, 0.06)', paddingTop: '50px', paddingBottom: '30px' }}>
+        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-[60px] max-w-[1200px] mx-auto mb-10" style={{ boxSizing: 'border-box' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, fontSize: '16px', color: '#111111', marginBottom: '16px' }}>
+              {logoIconSvg}
+              <span>DEVILSTONE</span>
+            </div>
+            <p style={{ fontSize: '13.5px', color: '#666666', lineHeight: '1.6', maxWidth: '320px', margin: 0 }}>
+              The ultimate interactive fretboard console and learning management system for guitarists. Master your theory with precision.
+            </p>
+          </div>
+          <div>
+            <h4 style={{ fontSize: '12px', fontWeight: 700, color: '#111111', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Navigation</h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <li><a href="#fretboard" style={{ fontSize: '13px', color: '#666666', textDecoration: 'none' }}>Console</a></li>
+              <li><a href="#shapes" style={{ fontSize: '13px', color: '#666666', textDecoration: 'none' }}>Shapes</a></li>
+              <li><a href="#about" style={{ fontSize: '13px', color: '#666666', textDecoration: 'none' }}>About</a></li>
+              <li><Link href="/academy" style={{ fontSize: '13px', color: '#666666', textDecoration: 'none' }}>Academy</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 style={{ fontSize: '12px', fontWeight: 700, color: '#111111', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Status</h4>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+              <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: '#10b981' }}></span>
+              <span style={{ fontSize: '13px', color: '#666666' }}>Engine: Active</span>
+            </div>
+            <p style={{ fontSize: '12px', color: '#888888', margin: 0, lineHeight: '1.4' }}>
+              Currently in active development. Version 2.0-Alpha.
+            </p>
+          </div>
+        </div>
+        
+        <div style={{ borderTop: '1px solid rgba(0, 0, 0, 0.04)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1200px', margin: '0 auto', boxSizing: 'border-box', flexWrap: 'wrap', gap: '16px' }}>
+          <p style={{ fontSize: '12px', color: '#888888', margin: 0 }}>
+            © 2026 DEVILSTONE. All rights reserved. Designed and copywritten for aspiring guitarists.
+          </p>
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <span style={{ fontSize: '12px', color: '#888888', cursor: 'pointer' }}>Privacy Policy</span>
+            <span style={{ fontSize: '12px', color: '#888888', cursor: 'pointer' }}>Terms of Service</span>
+            <span style={{ fontSize: '12px', color: '#888888', cursor: 'pointer' }}>Licensing</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
