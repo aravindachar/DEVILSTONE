@@ -31,6 +31,7 @@ export const THEME = {
   fonts: {
     tech: '"Inter", system-ui, sans-serif',
     pixel: '"Silkscreen", "Press Start 2P", monospace',
+    display: '"Unbounded", system-ui, sans-serif',
   },
 };
 export type ThemeType = typeof THEME;

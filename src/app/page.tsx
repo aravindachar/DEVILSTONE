@@ -59,10 +59,11 @@ function DevilstoneContent() {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    fontWeight: 700,
-    fontSize: '15px',
+    fontFamily: THEME.fonts.display,
+    fontWeight: 600, // Reduced boldness
+    fontSize: '17px', // Increased size
     color: '#F4F4F2',
-    letterSpacing: '-0.3px',
+    letterSpacing: '-0.5px',
     cursor: 'pointer',
   };
 
@@ -104,12 +105,13 @@ function DevilstoneContent() {
   };
 
   const headlineStyle: React.CSSProperties = {
-    fontFamily: THEME.fonts.pixel,
-    fontSize: '72px',
+    fontFamily: THEME.fonts.display,
+    fontSize: '76px', // Increased size
+    fontWeight: 600, // Reduced boldness
     lineHeight: '1.05',
     color: '#F4F4F2',
     marginBottom: '32px',
-    letterSpacing: '-2px',
+    letterSpacing: '-3px',
   };
 
   const descriptionStyle: React.CSSProperties = {
@@ -224,7 +226,7 @@ function DevilstoneContent() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-[60px] items-center">
             <div>
               <span style={{ fontSize: '12px', fontWeight: 700, color: '#00D7FF', letterSpacing: '1.5px', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>THE PHILOSOPHY</span>
-              <h2 style={{ fontSize: '36px', fontWeight: 800, color: '#F4F4F2', lineHeight: '1.2', marginBottom: '20px', letterSpacing: '-0.8px' }}>
+              <h2 style={{ fontFamily: THEME.fonts.display, fontSize: '28px', fontWeight: 800, color: '#F4F4F2', lineHeight: '1.25', marginBottom: '20px', letterSpacing: '-1px' }}>
                 Bridging Music Theory and Physical Intuition.
               </h2>
               <p style={{ fontSize: '15px', color: '#94A3B8', lineHeight: '1.7', marginBottom: '24px' }}>
@@ -281,7 +283,7 @@ function DevilstoneContent() {
       }}>
         <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1.2fr] gap-[40px] max-w-[1200px] mx-auto mb-10" style={{ boxSizing: 'border-box' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, fontSize: '16px', color: '#0F172A', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: THEME.fonts.display, fontWeight: 600, fontSize: '18px', color: '#0F172A', marginBottom: '16px', letterSpacing: '-0.5px' }}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L2 22h20L12 2z" fill="#0F172A" />
                 <circle cx="12" cy="14" r="3" fill="#FAF9F6" />
