@@ -170,6 +170,8 @@ function DevilstoneContent() {
           <li><a href="#about" style={navLinkItemStyle}>About</a></li>
           <li><Link href="/academy" style={navLinkItemStyle}>Academy</Link></li>
         </ul>
+        {/* Hiding Sign in button for now */}
+        {/* 
         <button 
           style={navButtonStyle}
           onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
@@ -177,6 +179,7 @@ function DevilstoneContent() {
         >
           Sign in
         </button>
+        */}
       </nav>
 
       {/* Hero Section */}
