@@ -41,3 +41,28 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# Antigravity/Gemini Agent config & logs
+.agents/
+.gemini/
+*.log
+skills-lock.json
+AGENTS.md
+CLAUDE.md
+
+# Workspace logs & scratchpads
+task.md
+walkthrough.md
+test_db.js
+seed_out.txt
+seed_err.txt
+
+# Editor / IDE configuration folders
+.claude/
+.windsurf/
+
+# Local SQLite databases
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
