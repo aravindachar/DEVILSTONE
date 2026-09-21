@@ -23,42 +23,54 @@ export const noteToFreq = (noteWithOctave: string): number => {
 export const playPluckTone = (
   ctx: AudioContext,
   freq: number,
-  duration = 0.4,
-  gainValue = 0.25
+  duration = 0.55,
+  gainValue = 0.28
 ) => {
   const osc1 = ctx.createOscillator();
   const osc2 = ctx.createOscillator();
+  const osc3 = ctx.createOscillator();
   const gainNode = ctx.createGain();
   const filterNode = ctx.createBiquadFilter();
 
   const now = ctx.currentTime;
 
-  // Primary sine wave for solid fundamental
-  osc1.type = 'sine';
+  // Primary warm triangle wave for rich fundamental body
+  osc1.type = 'triangle';
   osc1.frequency.setValueAtTime(freq, now);
 
-  // Subtle triangle harmonic one octave up for a crisp "pluck" transient
-  osc2.type = 'triangle';
+  // Subtle sine wave at 2x octave for crisp string overtone
+  osc2.type = 'sine';
   osc2.frequency.setValueAtTime(freq * 2, now);
 
-  // Filter sweep for cyber synth feel
-  filterNode.type = 'lowpass';
-  filterNode.Q.setValueAtTime(1, now);
-  filterNode.frequency.setValueAtTime(freq * 3, now);
-  filterNode.frequency.exponentialRampToValueAtTime(freq * 1.2, now + duration);
+  // 3x harmonic transient for guitar pick attack
+  osc3.type = 'sine';
+  osc3.frequency.setValueAtTime(freq * 3, now);
 
-  // Pluck envelope: rapid attack, exponential decay
+  // Dynamic low-pass filter to simulate string vibration decay
+  filterNode.type = 'lowpass';
+  filterNode.Q.setValueAtTime(1.5, now);
+  filterNode.frequency.setValueAtTime(Math.min(freq * 4.5, 9000), now);
+  filterNode.frequency.exponentialRampToValueAtTime(Math.max(freq * 1.1, 120), now + duration);
+
+  // Natural string envelope: immediate pick strike, logarithmic decay
   gainNode.gain.setValueAtTime(0, now);
-  gainNode.gain.linearRampToValueAtTime(gainValue, now + 0.005);
-  gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+  gainNode.gain.linearRampToValueAtTime(gainValue, now + 0.004);
+  gainNode.gain.exponentialRampToValueAtTime(gainValue * 0.45, now + 0.08);
+  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
   // Connect nodes
   osc1.connect(filterNode);
-  // Layer in the upper octave at lower gain
+
   const osc2Gain = ctx.createGain();
-  osc2Gain.gain.setValueAtTime(0.05, now);
+  osc2Gain.gain.setValueAtTime(0.12, now);
   osc2.connect(osc2Gain);
   osc2Gain.connect(filterNode);
+
+  const osc3Gain = ctx.createGain();
+  osc3Gain.gain.setValueAtTime(0.06, now);
+  osc3Gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+  osc3.connect(osc3Gain);
+  osc3Gain.connect(filterNode);
 
   filterNode.connect(gainNode);
   gainNode.connect(ctx.destination);
@@ -66,8 +78,10 @@ export const playPluckTone = (
   // Start & Stop
   osc1.start(now);
   osc2.start(now);
+  osc3.start(now);
   osc1.stop(now + duration);
   osc2.stop(now + duration);
+  osc3.stop(now + duration);
 
   return {
     stop: () => {
@@ -104,4 +118,28 @@ export const playClickTone = (
 
   osc.start(time);
   osc.stop(time + duration);
+};
+
+/**
+ * Plays a strummed polyphonic chord from note names (e.g. ['C', 'E', 'G'])
+ */
+export const playChordTones = (
+  ctx: AudioContext,
+  noteNames: NoteName[],
+  baseOctave = 3
+) => {
+  if (!ctx || ctx.state === 'suspended') {
+    ctx?.resume();
+  }
+  noteNames.forEach((note, idx) => {
+    const delay = idx * 0.045; // Subtle strum delay
+    const rootIdx = NOTES.indexOf(noteNames[0]);
+    const currIdx = NOTES.indexOf(note);
+    const octave = idx === 0 ? baseOctave : (currIdx < rootIdx ? baseOctave + 1 : baseOctave);
+    const fullNote = `${note}${octave}`;
+    const freq = noteToFreq(fullNote);
+    setTimeout(() => {
+      playPluckTone(ctx, freq, 0.95, 0.22);
+    }, delay * 1000);
+  });
 };

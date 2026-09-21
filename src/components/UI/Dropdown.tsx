@@ -29,23 +29,23 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   const selectStyle: React.CSSProperties = {
     fontFamily: THEME.fonts.tech,
-    padding: '10px 14px',
-    borderRadius: '10px', // Consistent corner radius
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
-    color: '#F4F4F2', // Soft off-white text
+    padding: '8px 12px',
+    borderRadius: '8px',
+    border: '1px solid rgba(0, 0, 0, 0.14)',
+    backgroundColor: '#FFFFFF',
+    color: '#0F172A',
     fontSize: '13px',
-    fontWeight: 500,
+    fontWeight: 600,
     outline: 'none',
     cursor: 'pointer',
-    transition: 'all 0.2s',
-    boxShadow: 'none',
+    transition: 'all 0.15s ease',
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
     ...style,
   };
 
   const optionStyle: React.CSSProperties = {
-    color: '#F4F4F2',
-    backgroundColor: '#121827',
+    color: '#0F172A',
+    backgroundColor: '#FFFFFF',
   };
 
   return (

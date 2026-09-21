@@ -15,34 +15,36 @@ export const Button: React.FC<ButtonProps> = ({
     switch (variant) {
       case 'danger':
         return {
-          backgroundColor: 'rgba(239, 68, 68, 0.06)',
-          color: '#EF4444',
-          border: '1px solid rgba(239, 68, 68, 0.15)',
+          backgroundColor: '#FEF2F2',
+          color: '#DC2626',
+          border: '1px solid #FECACA',
         };
       case 'success':
         return {
-          backgroundColor: 'rgba(16, 185, 129, 0.06)',
-          color: '#10B981',
-          border: '1px solid rgba(16, 185, 129, 0.15)',
+          backgroundColor: '#F0FDF4',
+          color: '#16A34A',
+          border: '1px solid #BBF7D0',
         };
       case 'cyber':
         return {
-          backgroundColor: 'rgba(0, 215, 255, 0.05)',
-          color: '#00D7FF',
-          border: '1px solid rgba(0, 215, 255, 0.18)',
+          backgroundColor: '#EFF6FF',
+          color: '#0284C7',
+          border: '1px solid #BAE6FD',
         };
       case 'secondary':
         return {
-          backgroundColor: 'rgba(255, 255, 255, 0.03)',
-          color: '#94A3B8', // Visually recedes
-          border: '1px solid rgba(255, 255, 255, 0.05)',
+          backgroundColor: '#FFFFFF',
+          color: '#334155',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
+          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04)',
         };
       case 'primary':
       default:
         return {
-          backgroundColor: '#ffffff',
-          color: '#080B14',
+          backgroundColor: '#0F172A',
+          color: '#FFFFFF',
           border: 'none',
+          boxShadow: '0 2px 6px rgba(15, 23, 42, 0.15)',
         };
     }
   };

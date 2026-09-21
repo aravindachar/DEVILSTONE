@@ -1,11 +1,20 @@
 'use client';
 
-/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState } from 'react';
-import type { NoteName, ScaleType, TuningType, CagedShape, DisplayMode, MetronomeAccent, InstrumentType } from '../types/music';
+import type {
+  NoteName,
+  ScaleType,
+  TuningType,
+  CagedShape,
+  DisplayMode,
+  MetronomeAccent,
+  InstrumentType,
+  NoteInspectionInfo,
+} from '../types/music';
 import { useAudioContext } from '../hooks/useAudioContext';
 import { useMetronome } from '../hooks/useMetronome';
 import { useFretboard } from '../hooks/useFretboard';
+import { playChordTones } from '../utils/audio';
 
 interface AppContextType {
   // Global Fretboard States
@@ -19,7 +28,15 @@ interface AppContextType {
   setDisplayMode: (m: DisplayMode) => void;
   cagedShape: CagedShape;
   setCagedShape: (c: CagedShape) => void;
-  
+
+  // Capo Configuration
+  capoFret: number;
+  setCapoFret: (fret: number) => void;
+
+  // Interactive Note Inspector HUD
+  hoveredNoteInfo: NoteInspectionInfo | null;
+  setHoveredNoteInfo: (info: NoteInspectionInfo | null) => void;
+
   // Instrument and Fret Range selectors
   instrument: InstrumentType;
   setInstrument: (i: InstrumentType) => void;
@@ -49,10 +66,28 @@ interface AppContextType {
   isMinor: boolean;
   playFretNote: (fullNote: string) => void;
   strum: () => void;
+  activePlayingNote: string | null;
+  isPlayingSequence: boolean;
+  togglePlaySequence: () => void;
 
   // Focus Mode
   isFocusMode: boolean;
   setIsFocusMode: (f: boolean) => void;
+
+  // Box Position Isolator (1 to 5, or null for ALL)
+  activePosition: number | null;
+  setActivePosition: (pos: number | null) => void;
+
+  // Active Chord Tones Highlight
+  activeChordNotes: NoteName[] | null;
+  setActiveChordNotes: (notes: NoteName[] | null) => void;
+
+  // Related Chords Flyout & Metronome Modal
+  isRelatedChordsOpen: boolean;
+  setIsRelatedChordsOpen: (open: boolean) => void;
+  isMetronomeModalOpen: boolean;
+  setIsMetronomeModalOpen: (open: boolean) => void;
+  playChord: (notes: NoteName[]) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -67,6 +102,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [displayMode, setDisplayMode] = useState<DisplayMode>('notes');
   const [cagedShape, setCagedShape] = useState<CagedShape>('None');
 
+  // Capo and Note Inspector
+  const [capoFret, setCapoFret] = useState<number>(0);
+  const [hoveredNoteInfo, setHoveredNoteInfo] = useState<NoteInspectionInfo | null>(null);
+
   // Instrument and Fret Range
   const [instrument, setInstrumentState] = useState<InstrumentType>('guitar');
   const [fretRange, setFretRange] = useState<[number, number]>([0, 24]);
@@ -77,6 +116,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [subdivision, setSubdivision] = useState<1 | 2>(1);
   const [swing, setSwing] = useState<number>(50);
   const [isFocusMode, setIsFocusMode] = useState<boolean>(false);
+
+  // Position Isolator (1 to 5, or null for ALL)
+  const [activePosition, setActivePosition] = useState<number | null>(null);
+
+  // Active Chord Tones Highlight
+  const [activeChordNotes, setActiveChordNotes] = useState<NoteName[] | null>(null);
+
+  // Related Chords and Metronome Modals
+  const [isRelatedChordsOpen, setIsRelatedChordsOpen] = useState<boolean>(false);
+  const [isMetronomeModalOpen, setIsMetronomeModalOpen] = useState<boolean>(false);
+
+  const playChord = (notes: NoteName[]) => {
+    try {
+      const ctx = getAudioContext();
+      playChordTones(ctx, notes);
+    } catch (err) {
+      console.error('Failed to play chord tones:', err);
+    }
+  };
 
   const setInstrument = (i: InstrumentType) => {
     setInstrumentState(i);
@@ -103,6 +161,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     selectedScale,
     selectedTuning,
     cagedShape,
+    capoFret,
+    bpm,
+    fretRange,
   });
 
   return (
@@ -118,12 +179,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setDisplayMode,
         cagedShape,
         setCagedShape,
-        
+
+        capoFret,
+        setCapoFret,
+        hoveredNoteInfo,
+        setHoveredNoteInfo,
+
         instrument,
         setInstrument,
         fretRange,
         setFretRange,
-        
+
         bpm,
         setBpm,
         accentPattern,
@@ -132,21 +198,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSubdivision,
         swing,
         setSwing,
-        
+
         getAudioContext,
         isPlaying: metronome.isPlaying,
         currentBeat: metronome.currentBeat,
         currentSubdivision: metronome.currentSubdivision,
         togglePlay: metronome.togglePlay,
-        
+
         currentTuningNotes: fretboard.currentTuningNotes,
         activeScaleDegreeIndices: fretboard.activeScaleDegreeIndices,
         isMinor: fretboard.isMinor,
         playFretNote: fretboard.playFretNote,
         strum: fretboard.strum,
+        activePlayingNote: fretboard.activePlayingNote,
+        isPlayingSequence: fretboard.isPlayingSequence,
+        togglePlaySequence: fretboard.togglePlaySequence,
 
         isFocusMode,
         setIsFocusMode,
+
+        activePosition,
+        setActivePosition,
+        activeChordNotes,
+        setActiveChordNotes,
+        isRelatedChordsOpen,
+        setIsRelatedChordsOpen,
+        isMetronomeModalOpen,
+        setIsMetronomeModalOpen,
+        playChord,
       }}
     >
       {children}

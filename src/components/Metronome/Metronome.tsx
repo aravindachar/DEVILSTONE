@@ -29,15 +29,22 @@ export const Metronome: React.FC = () => {
   const [timeRemaining, setTimeRemaining] = React.useState<number>(0);
   const timerRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  // Synced remaining countdown
-  React.useEffect(() => {
-    setTimeRemaining(practiceDuration);
-  }, [practiceDuration]);
+  const handleDurationChange = (secs: number) => {
+    setPracticeDuration(secs);
+    setTimeRemaining(secs);
+  };
+
+  const handleTogglePlay = () => {
+    if (!isPlaying && practiceDuration > 0 && timeRemaining <= 0) {
+      setTimeRemaining(practiceDuration);
+    }
+    togglePlay();
+  };
 
   // Double synth beep when practice timer finishes
   const playTimerDoneBeep = () => {
     try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (!AudioCtx) return;
       const ctx = new AudioCtx();
       
@@ -61,10 +68,6 @@ export const Metronome: React.FC = () => {
   // Tick timer countdown
   React.useEffect(() => {
     if (isPlaying && practiceDuration > 0) {
-      if (timeRemaining <= 0) {
-        setTimeRemaining(practiceDuration);
-      }
-
       timerRef.current = setInterval(() => {
         setTimeRemaining((prev) => {
           if (prev <= 1) {
@@ -88,7 +91,7 @@ export const Metronome: React.FC = () => {
         clearInterval(timerRef.current);
       }
     };
-  }, [isPlaying, practiceDuration, timeRemaining]);
+  }, [isPlaying, practiceDuration, togglePlay]);
 
   const formatTime = (secs: number): string => {
     const m = Math.floor(secs / 60);
@@ -127,7 +130,7 @@ export const Metronome: React.FC = () => {
       {/* Play/Stop Trigger */}
       <Button
         variant={isPlaying ? 'danger' : 'primary'}
-        onClick={togglePlay}
+        onClick={handleTogglePlay}
         style={{
           width: '130px',
           alignSelf: 'stretch',
@@ -258,7 +261,7 @@ export const Metronome: React.FC = () => {
         </div>
         <select
           value={practiceDuration.toString()}
-          onChange={(e) => setPracticeDuration(Number(e.target.value))}
+          onChange={(e) => handleDurationChange(Number(e.target.value))}
           style={{
             fontFamily: THEME.fonts.tech,
             padding: '10px 14px',

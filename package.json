@@ -3,22 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "prisma migrate deploy && node prisma/seed.js && next build",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.67",
+    "@ai-sdk/openai": "^4.0.65",
     "@prisma/adapter-better-sqlite3": "^7.9.1",
     "@prisma/client": "^7.9.1",
     "@tailwindcss/typography": "^0.5.20",
+    "@types/three": "^0.185.4",
+    "ai": "^7.0.97",
     "better-sqlite3": "^13.0.2",
+    "gsap": "^3.15.0",
     "html-to-image": "^1.11.13",
     "lucide-react": "^1.28.0",
     "next": "16.3.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-markdown": "^10.1.0",
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -2,413 +2,378 @@
 
 import React from 'react';
 import { AppProvider, useApp } from '@/context/AppContext';
-import ControlPanel from '@/components/Controls/ControlPanel';
-import Metronome from '@/components/Metronome/Metronome';
+import { ControlPanel, SubFretboardPositionBar, BottomStudioConsoleBar } from '@/components/Controls/ControlPanel';
 import Fretboard from '@/components/Fretboard/Fretboard';
 import ShapeLibrary from '@/components/Shapes/ShapeLibrary';
 import TheoryGrimoire from '@/components/Theory/TheoryGrimoire';
+import RelatedChordsSidebar from '@/components/Theory/RelatedChordsSidebar';
+import MetronomeModal from '@/components/Metronome/MetronomeModal';
 import { THEME } from '@/constants/theme';
 import Button from '@/components/UI/Button';
 import Link from 'next/link';
+import MaestroAssistant from '@/components/Assistant/MaestroAssistant';
+import { Info, Compass, Guitar, LayoutGrid, Timer, Music, Mail } from 'lucide-react';
 
 function DevilstoneContent() {
-  const { isFocusMode, setIsFocusMode } = useApp();
+  const {
+    isFocusMode,
+    setIsFocusMode,
+    selectedKey,
+    selectedScale,
+    activePosition,
+    setIsRelatedChordsOpen,
+    setIsMetronomeModalOpen,
+  } = useApp();
 
   const containerStyle: React.CSSProperties = {
     fontFamily: THEME.fonts.tech,
-    color: THEME.colors.textPrimary,
+    color: '#0F172A',
     minHeight: '100vh',
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    backgroundColor: '#000000',
+    backgroundColor: 'transparent',
     width: '100%',
     overflowX: 'hidden',
   };
 
   const contentWrapperStyle: React.CSSProperties = {
     flex: '1 0 auto',
-    padding: isFocusMode ? '0' : '0 30px 80px 30px',
+    padding: isFocusMode ? '0' : '0 24px 140px 24px',
     boxSizing: 'border-box',
     width: '100%',
-  };
-
-  // Floating Pill Navbar (Using Surface colors and 8px spacing system)
-  const navbarStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '8px 16px 8px 24px',
-    backgroundColor: 'rgba(18, 24, 39, 0.7)', /* Translucent Surface */
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    borderRadius: '100px', /* Keeps pill style for main nav */
-    border: '1px solid rgba(255, 255, 255, 0.05)', /* Subtle border */
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-    maxWidth: '560px',
-    width: '100%',
-    margin: '24px auto 0 auto',
-    position: 'sticky',
-    top: '24px',
-    zIndex: 100,
-    boxSizing: 'border-box',
-  };
-
-  const navBrandStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    fontFamily: THEME.fonts.display,
-    fontWeight: 600, // Reduced boldness
-    fontSize: '17px', // Increased size
-    color: '#F4F4F2',
-    letterSpacing: '-0.5px',
-    cursor: 'pointer',
-  };
-
-  const navLinksStyle: React.CSSProperties = {
-    display: 'flex',
-    gap: '24px',
-    listStyle: 'none',
-    margin: 0,
-    padding: 0,
-  };
-
-  const navLinkItemStyle: React.CSSProperties = {
-    fontSize: '13px',
-    fontWeight: 500,
-    color: '#94A3B8',
-    textDecoration: 'none',
-    cursor: 'pointer',
-    transition: 'color 0.2s',
-  };
-
-  const navButtonStyle: React.CSSProperties = {
-    backgroundColor: '#FFFFFF',
-    color: '#080B14',
-    border: 'none',
-    borderRadius: '20px',
-    padding: '8px 18px',
-    fontWeight: 600,
-    fontSize: '12px',
-    cursor: 'pointer',
-    transition: 'transform 0.15s',
-  };
-
-  // Hero Section (Increased whitespace/breathing room)
-  const heroStyle: React.CSSProperties = {
-    textAlign: 'center',
-    padding: '130px 20px 140px 20px',
-    maxWidth: '850px',
+    maxWidth: '1440px',
     margin: '0 auto',
   };
 
-  const headlineStyle: React.CSSProperties = {
-    fontFamily: THEME.fonts.display,
-    fontSize: '76px', // Increased size
-    fontWeight: 600, // Reduced boldness
-    lineHeight: '1.05',
-    color: '#F4F4F2',
-    marginBottom: '32px',
-    letterSpacing: '-3px',
-  };
-
-  const descriptionStyle: React.CSSProperties = {
-    fontSize: '18px',
-    color: '#94A3B8',
-    lineHeight: '1.6',
-    maxWidth: '580px',
-    margin: '0 auto 48px auto',
-    letterSpacing: '-0.2px',
-  };
-
-  const ctaContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    gap: '16px',
-    justifyContent: 'center',
-  };
-
-  const logoIconSvg = (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2L2 22h20L12 2z" fill="#F4F4F2" />
-      <circle cx="12" cy="14" r="3" fill="#0B1020" />
-    </svg>
-  );
-
   return (
-    <div className={isFocusMode ? "focus-mode-active" : ""} style={containerStyle}>
+    <div className={isFocusMode ? 'focus-mode-active' : ''} style={containerStyle}>
       <div style={contentWrapperStyle}>
-      {/* Floating Exit Focus Mode Button */}
-      {isFocusMode && (
-        <div style={{ position: 'fixed', top: '24px', right: '30px', zIndex: 1000 }}>
-          <Button 
-            variant="secondary"
-            onClick={() => setIsFocusMode(false)}
-            style={{ 
-              padding: '10px 24px', 
-              background: 'rgba(18, 24, 39, 0.85)', 
-              border: '1px solid rgba(255, 255, 255, 0.05)', 
-              color: '#F4F4F2',
-              backdropFilter: 'blur(10px)'
-            }}
-          >
-            ✕ Exit Focus Mode
-          </Button>
-        </div>
-      )}
+        {/* Floating Exit Focus Mode Button */}
+        {isFocusMode && (
+          <div style={{ position: 'fixed', top: '24px', right: '30px', zIndex: 1000 }}>
+            <Button
+              variant="secondary"
+              onClick={() => setIsFocusMode(false)}
+              style={{
+                padding: '10px 20px',
+                background: '#FFFFFF',
+                border: '1px solid #E2E8F0',
+                color: '#0F172A',
+                boxShadow: '0 4px 14px rgba(0,0,0,0.08)',
+              }}
+            >
+              ✕ Exit Focus Mode
+            </Button>
+          </div>
+        )}
 
-      {/* Small Floating Pill Navbar */}
-      <nav style={navbarStyle}>
-        <div style={navBrandStyle}>
-          {logoIconSvg}
-          <span>DEVILSTONE</span>
-        </div>
-        <ul style={navLinksStyle}>
-          <li><a href="#fretboard" style={navLinkItemStyle}>Console</a></li>
-          <li><a href="#shapes" style={navLinkItemStyle}>Shapes</a></li>
-          <li><a href="#about" style={navLinkItemStyle}>About</a></li>
-          <li><Link href="/academy" style={navLinkItemStyle}>Academy</Link></li>
-        </ul>
-        {/* Hiding Sign in button for now */}
-        {/* 
-        <button 
-          style={navButtonStyle}
-          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
-          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-        >
-          Sign in
-        </button>
-        */}
-      </nav>
+        {/* Studio Top Navbar matching clean FretMap inspiration */}
+        <header className="flex items-center justify-between py-4 px-2 mb-6 border-b border-stone-200/80">
+          {/* Left Navigation Links */}
+          <div className="flex items-center gap-6">
+            <nav className="flex items-center gap-4 text-xs font-semibold text-stone-600">
+              <a href="#fretboard" className="hover:text-stone-900 transition-colors">
+                Console
+              </a>
+              <a href="#shapes" className="hover:text-stone-900 transition-colors">
+                Shapes
+              </a>
+              <a href="#grimoire" className="hover:text-stone-900 transition-colors">
+                Grimoire
+              </a>
+              <a href="#about" className="hover:text-stone-900 transition-colors">
+                About
+              </a>
+            </nav>
+          </div>
 
-      {/* Hero Section */}
-      <section style={heroStyle}>
-        <h1 style={headlineStyle}>DEVILSTONE</h1>
-        <p style={descriptionStyle}>
-          Master your fretboard through dynamic shape overlays, precision scheduled metronomes, and clean interactive audio theory.
-        </p>
-        <div style={ctaContainerStyle}>
-          <Button 
-            variant="primary" 
-            onClick={() => document.getElementById('fretboard')?.scrollIntoView({ behavior: 'smooth' })}
-            style={{ padding: '12px 28px' }}
-          >
-            Get started
-          </Button>
-          <Button 
-            variant="secondary"
-            onClick={() => document.getElementById('grimoire')?.scrollIntoView({ behavior: 'smooth' })}
-            style={{ padding: '12px 28px' }}
-          >
-            Read grimoire
-          </Button>
-        </div>
-      </section>
+          {/* Right: DEVILSTONE Branding & Academy Link */}
+          <div className="flex items-center gap-3">
+            <Link
+              href="/academy"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-stone-50 border border-stone-200/80 text-xs font-bold text-stone-800 transition-all shadow-xs"
+            >
+              <Compass className="w-3.5 h-3.5 text-[#D9531E]" />
+              <span>Academy</span>
+            </Link>
 
-      {/* Main Glass console Wrapper */}
-      <div id="fretboard" style={{ scrollMarginTop: '120px', marginTop: '40px' }}>
-        <ControlPanel />
-        <Metronome />
-        <Fretboard />
-      </div>
-
-      {/* Tier 2: Shape & Pattern Library */}
-      <div id="shapes" style={{ scrollMarginTop: '120px', marginTop: '140px' }}>
-        <ShapeLibrary />
-      </div>
-
-      {/* Tier 3: Theory Grimoire */}
-      <div id="grimoire" style={{ scrollMarginTop: '120px', marginTop: '140px' }}>
-        <TheoryGrimoire />
-      </div>
-
-      {/* Tier 4: About Section */}
-      <div id="about" style={{ scrollMarginTop: '120px', marginTop: '160px' }}>
-        <div className="glass-panel" style={{ padding: '60px 45px', maxWidth: '1200px', margin: '0 auto', boxSizing: 'border-box' }}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-[60px] items-center">
-            <div>
-              <span style={{ fontSize: '12px', fontWeight: 700, color: '#00D7FF', letterSpacing: '1.5px', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>THE PHILOSOPHY</span>
-              <h2 style={{ fontFamily: THEME.fonts.display, fontSize: '28px', fontWeight: 800, color: '#F4F4F2', lineHeight: '1.25', marginBottom: '20px', letterSpacing: '-1px' }}>
-                Bridging Music Theory and Physical Intuition.
-              </h2>
-              <p style={{ fontSize: '15px', color: '#94A3B8', lineHeight: '1.7', marginBottom: '24px' }}>
-                DEVILSTONE is an advanced guitar visualization console. Designed for serious students and professional guitarists alike, the platform translates abstract chord structures, scale relations, and CAGED patterns into immediate, geometric layouts.
-              </p>
-              <p style={{ fontSize: '15px', color: '#94A3B8', lineHeight: '1.7' }}>
-                By isolating fingerboard patterns and syncing them with an audio-backed rhythm metronome, we build muscular and auditory memory maps simultaneously. Built on top of the comprehensive Gibson guitar curriculum.
-              </p>
+            {/* Prominent DEVILSTONE Logo on Top Right */}
+            <div className="flex items-center gap-2 pl-2 border-l border-stone-200/80">
+              <div className="w-7 h-7 rounded-lg bg-stone-900 flex items-center justify-center text-white shadow-xs">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L2 22h20L12 2z" fill="#D9531E" />
+                  <circle cx="12" cy="14" r="3" fill="#FAF7EE" />
+                </svg>
+              </div>
+              <span className="font-extrabold tracking-tight text-sm text-stone-900">
+                DEVILSTONE
+              </span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div style={{ padding: '24px', background: 'rgba(18, 24, 39, 0.35)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                <div style={{ fontSize: '20px', marginBottom: '10px' }}>🎸</div>
-                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#F4F4F2', marginBottom: '8px' }}>Active Fretboard</h4>
-                <p style={{ fontSize: '13px', color: '#94A3B8', lineHeight: '1.5', margin: 0 }}>
-                  Interact with a 24-fret digital neck configured with customizable tunings and scale mappings.
+          </div>
+        </header>
+
+        {/* Scale Title Header Area matching Screenshot 2 */}
+        <section className="text-center pt-4 pb-4">
+          <div className="inline-flex items-center gap-1.5 mb-1 text-center justify-center">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#D9531E]">
+              {selectedKey} {selectedScale} Scale
+            </h1>
+            <button 
+              onClick={() => document.getElementById('grimoire')?.scrollIntoView({ behavior: 'smooth' })}
+              className="text-stone-400 hover:text-stone-700 transition-colors p-1"
+              title="View Scale Grimoire Details"
+            >
+              <Info className="w-4 h-4" />
+            </button>
+          </div>
+          <div className="text-xs font-mono font-medium text-stone-500">
+            {activePosition ? `Position ${activePosition}` : 'Full Neck'} &nbsp;/&nbsp; ⚲ {selectedKey}
+          </div>
+        </section>
+
+        {/* Main Fretboard Studio Console */}
+        <div id="fretboard" className="mt-2 scroll-mt-24">
+          {/* Top Key / Scale / Mode Dropdowns Bar */}
+          <ControlPanel />
+
+          {/* Photorealistic Lacquered Maple Fretboard */}
+          <Fretboard />
+
+          {/* Sub-Fretboard Position Bar (ALL, 1, 2, 3, 4, 5) matching Screenshot 2 */}
+          <SubFretboardPositionBar />
+        </div>
+
+        {/* Tier 2: Shape & Pattern Library */}
+        <div id="shapes" className="mt-20 scroll-mt-24">
+          <ShapeLibrary />
+        </div>
+
+        {/* Tier 3: Theory Grimoire */}
+        <div id="grimoire" className="mt-20 scroll-mt-24">
+          <TheoryGrimoire />
+        </div>
+
+        {/* Tier 4: About Section (Minimalist Studio Grid without heavy boxes) */}
+        <div id="about" className="mt-24 scroll-mt-24">
+          <div className="p-8 sm:p-12 rounded-2xl bg-white/80 border border-stone-200/80 shadow-xs">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <span className="text-[11px] font-mono font-bold tracking-widest text-[#D9531E] uppercase block mb-2">
+                  THE PHILOSOPHY
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight leading-snug mb-4">
+                  Bridging Music Theory and Physical Fingerboard Intuition.
+                </h2>
+                <p className="text-sm text-stone-600 leading-relaxed mb-4">
+                  DEVILSTONE is an advanced guitar visualization console. Designed for serious students and professional guitarists alike, the platform translates abstract chord structures, scale relations, and CAGED patterns into immediate, geometric layouts.
+                </p>
+                <p className="text-sm text-stone-600 leading-relaxed">
+                  By isolating fingerboard patterns and syncing them with an audio-backed rhythm metronome, we build muscular and auditory memory maps simultaneously. Built on top of the comprehensive Gibson guitar curriculum.
                 </p>
               </div>
-              <div style={{ padding: '24px', background: 'rgba(18, 24, 39, 0.35)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                <div style={{ fontSize: '20px', marginBottom: '10px' }}>⚡</div>
-                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#F4F4F2', marginBottom: '8px' }}>Pattern Isolation</h4>
-                <p style={{ fontSize: '13px', color: '#94A3B8', lineHeight: '1.5', margin: 0 }}>
-                  Master Pentatonic shapes and CAGED systems with visual highlighted fingerboard overlays.
-                </p>
-              </div>
-              <div style={{ padding: '24px', background: 'rgba(18, 24, 39, 0.35)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                <div style={{ fontSize: '20px', marginBottom: '10px' }}>⏱️</div>
-                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#F4F4F2', marginBottom: '8px' }}>Metronome Sync</h4>
-                <p style={{ fontSize: '13px', color: '#94A3B8', lineHeight: '1.5', margin: 0 }}>
-                  Practice in time with a high-accuracy, Web Audio-scheduled metronome sequencer.
-                </p>
-              </div>
-              <div style={{ padding: '24px', background: 'rgba(18, 24, 39, 0.35)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                <div style={{ fontSize: '20px', marginBottom: '10px' }}>🎓</div>
-                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#F4F4F2', marginBottom: '8px' }}>Academy LMS</h4>
-                <p style={{ fontSize: '13px', color: '#94A3B8', lineHeight: '1.5', margin: 0 }}>
-                  Step-by-step progress tracking for all 20 lessons of the structured guitar curriculum.
-                </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-5 rounded-xl bg-stone-50/80 border border-stone-200/70 shadow-xs">
+                  <div className="w-10 h-10 rounded-xl bg-orange-100/80 border border-orange-200/80 flex items-center justify-center text-[#D9531E] mb-3 shadow-xs">
+                    <Guitar className="w-5 h-5" />
+                  </div>
+                  <h4 className="text-sm font-bold text-stone-900 mb-1">Maple Fretboard</h4>
+                  <p className="text-xs text-stone-500 leading-relaxed">
+                    24-fret authentic golden maple fingerboard with black phenolic dot inlays and bone nut.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-xl bg-stone-50/80 border border-stone-200/70 shadow-xs">
+                  <div className="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200/80 flex items-center justify-center text-stone-800 mb-3 shadow-xs">
+                    <LayoutGrid className="w-5 h-5" />
+                  </div>
+                  <h4 className="text-sm font-bold text-stone-900 mb-1">Box Pattern Isolator</h4>
+                  <p className="text-xs text-stone-500 leading-relaxed">
+                    Instantly toggle between Positions 1–5 to isolate scale boxes and practice fluid solos.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-xl bg-stone-50/80 border border-stone-200/70 shadow-xs">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100/80 border border-emerald-200/80 flex items-center justify-center text-emerald-700 mb-3 shadow-xs">
+                    <Timer className="w-5 h-5" />
+                  </div>
+                  <h4 className="text-sm font-bold text-stone-900 mb-1">Studio Metronome</h4>
+                  <p className="text-xs text-stone-500 leading-relaxed">
+                    Precision Web Audio scheduled metronome with custom subdivision and accent presets.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-xl bg-stone-50/80 border border-stone-200/70 shadow-xs">
+                  <div className="w-10 h-10 rounded-xl bg-sky-100/80 border border-sky-200/80 flex items-center justify-center text-sky-700 mb-3 shadow-xs">
+                    <Music className="w-5 h-5" />
+                  </div>
+                  <h4 className="text-sm font-bold text-stone-900 mb-1">Diatonic Related Chords</h4>
+                  <p className="text-xs text-stone-500 leading-relaxed">
+                    Explore all 7 diatonic triad chords with real-time polyphonic audio previews.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      </div>
+      {/* Slide-over Flyout: Related Chords (Screenshot 2) */}
+      <RelatedChordsSidebar />
 
-      {/* Footer Section (Maple Wood Style) */}
-      <footer style={{ 
-        marginTop: '180px', 
-        borderTop: '4px solid #94A3B8', // Nickel fret wire line
-        backgroundColor: '#FAF9F6', // Maple wood background
-        color: '#1E293B',
-        padding: '60px 24px 40px 24px',
-        boxSizing: 'border-box'
-      }}>
-        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1.2fr] gap-[40px] max-w-[1200px] mx-auto mb-10" style={{ boxSizing: 'border-box' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: THEME.fonts.display, fontWeight: 600, fontSize: '18px', color: '#0F172A', marginBottom: '16px', letterSpacing: '-0.5px' }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 22h20L12 2z" fill="#0F172A" />
-                <circle cx="12" cy="14" r="3" fill="#FAF9F6" />
-              </svg>
-              <span>DEVILSTONE</span>
+      {/* Modal Dialog: Metronome Settings (Screenshot 3) */}
+      <MetronomeModal />
+
+      {/* Sticky Bottom Studio Console Bar matching Screenshot 2 */}
+      <BottomStudioConsoleBar />
+
+      {/* Studio Footer Section (Complete 3-Column Studio Footer with Safe Dock Clearance) */}
+      <footer className="border-t-2 border-stone-300/80 bg-[#FAF9F6]/95 backdrop-blur-md pt-14 pb-40 px-6 text-stone-600 mt-20 z-10 relative">
+        <div className="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-stone-200/80">
+          {/* Column 1: DEVILSTONE Branding (5 cols) */}
+          <div className="md:col-span-5 space-y-4">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-stone-900 flex items-center justify-center text-white shadow-xs">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L2 22h20L12 2z" fill="#D9531E" />
+                  <circle cx="12" cy="14" r="3" fill="#FAF7EE" />
+                </svg>
+              </div>
+              <span className="font-extrabold tracking-tight text-lg text-stone-900">
+                DEVILSTONE
+              </span>
             </div>
-            <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: '1.6', maxWidth: '320px', margin: 0 }}>
-              The ultimate interactive fretboard console and learning management system for guitarists. Master your theory with precision.
+
+            <p className="text-sm text-stone-600 leading-relaxed max-w-sm">
+              The ultimate interactive fretboard console and theory learning system for guitarists. Master physical intuition, scale geometry, and CAGED patterns with precision.
             </p>
+
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[11px] font-mono font-medium text-emerald-800">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span>All Systems Operational • Real-time Web Audio Engine</span>
+            </div>
           </div>
-          
-          <div>
-            <h4 style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Navigation</h4>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+
+          {/* Column 2: Navigation Links (3 cols) */}
+          <div className="md:col-span-3 space-y-3">
+            <h4 className="text-xs font-bold font-mono tracking-wider text-stone-900 uppercase mb-4">
+              Navigation
+            </h4>
+            <ul className="space-y-2.5 text-sm">
               <li>
-                <a href="#fretboard" style={{ fontSize: '13px', color: '#475569', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#00D7FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}>
-                  Console
+                <a href="#fretboard" className="text-stone-600 hover:text-stone-900 transition-colors font-medium">
+                  Fretboard Console
                 </a>
               </li>
               <li>
-                <a href="#shapes" style={{ fontSize: '13px', color: '#475569', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#00D7FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}>
-                  Shapes
+                <a href="#shapes" className="text-stone-600 hover:text-stone-900 transition-colors font-medium">
+                  Shape Library
                 </a>
               </li>
               <li>
-                <Link href="/academy" style={{ fontSize: '13px', color: '#475569', textDecoration: 'none', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#00D7FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}>
-                  Academy
+                <a href="#grimoire" className="text-stone-600 hover:text-stone-900 transition-colors font-medium">
+                  Theory Grimoire
+                </a>
+              </li>
+              <li>
+                <Link href="/academy" className="text-stone-600 hover:text-[#D9531E] transition-colors font-medium flex items-center gap-1.5">
+                  <span>Academy</span>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-orange-100 text-[#D9531E] font-bold">20 Lessons</span>
                 </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => setIsRelatedChordsOpen(true)}
+                  className="text-stone-600 hover:text-stone-900 transition-colors font-medium text-left"
+                >
+                  Diatonic Chords Matrix
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setIsMetronomeModalOpen(true)}
+                  className="text-stone-600 hover:text-stone-900 transition-colors font-medium text-left"
+                >
+                  Studio Metronome
+                </button>
               </li>
             </ul>
           </div>
 
-          <div>
-            <h4 style={{ fontSize: '12px', fontWeight: 700, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>Developer</h4>
-            <p style={{ fontSize: '14.5px', color: '#0F172A', fontWeight: 800, margin: '0 0 6px 0' }}>
-              Aravinda Kambar
-            </p>
-            <p style={{ fontSize: '13px', color: '#475569', lineHeight: '1.5', margin: '0 0 16px 0' }}>
-              Enjoy and practice more! Contact for bugs and feedback.
-            </p>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <a 
-                href="https://www.linkedin.com/in/aravinda-kambar-58b622255/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ 
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '34px',
-                  height: '34px',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(15, 23, 42, 0.12)',
-                  backgroundColor: 'rgba(15, 23, 42, 0.04)',
-                  color: '#1E293B',
-                  textDecoration: 'none',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#00D7FF';
-                  e.currentTarget.style.borderColor = '#00D7FF';
-                  e.currentTarget.style.backgroundColor = 'rgba(0, 215, 255, 0.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#1E293B';
-                  e.currentTarget.style.borderColor = 'rgba(15, 23, 42, 0.12)';
-                  e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.04)';
-                }}
-                title="LinkedIn Profile"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                  <rect x="2" y="9" width="4" height="12"></rect>
-                  <circle cx="4" cy="4" r="2"></circle>
-                </svg>
-              </a>
-              <a 
-                href="mailto:aravindachar2004@gmail.com"
-                style={{ 
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '34px',
-                  height: '34px',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(15, 23, 42, 0.12)',
-                  backgroundColor: 'rgba(15, 23, 42, 0.04)',
-                  color: '#1E293B',
-                  textDecoration: 'none',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#00D7FF';
-                  e.currentTarget.style.borderColor = '#00D7FF';
-                  e.currentTarget.style.backgroundColor = 'rgba(0, 215, 255, 0.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#1E293B';
-                  e.currentTarget.style.borderColor = 'rgba(15, 23, 42, 0.12)';
-                  e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.04)';
-                }}
-                title="Send Email"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                  <polyline points="22,6 12,13 2,6"></polyline>
-                </svg>
-              </a>
+          {/* Column 3: Developer Card & Socials (4 cols) */}
+          <div className="md:col-span-4 space-y-3">
+            <h4 className="text-xs font-bold font-mono tracking-wider text-stone-900 uppercase mb-4">
+              Developer
+            </h4>
+            <div className="p-4 rounded-xl bg-white/80 border border-stone-200/80 shadow-xs space-y-3">
+              <div>
+                <div className="text-sm font-bold text-stone-900">
+                  Aravinda Kambar
+                </div>
+                <div className="text-xs text-stone-500">
+                  Full-stack Audio & Systems Engineer
+                </div>
+              </div>
+              <p className="text-xs text-stone-600 leading-relaxed">
+                Enjoy and practice more! Feel free to reach out for feedback, feature suggestions, or collaboration.
+              </p>
+              <div className="flex items-center gap-2 pt-1">
+                {/* LinkedIn */}
+                <a
+                  href="https://www.linkedin.com/in/aravinda-kambar-58b622255/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-lg bg-stone-100 hover:bg-[#0077b5] text-stone-700 hover:text-white flex items-center justify-center transition-all shadow-xs"
+                  title="Aravinda Kambar on LinkedIn"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                  </svg>
+                </a>
+                {/* Email */}
+                <a
+                  href="mailto:aravindachar2004@gmail.com"
+                  className="w-8 h-8 rounded-lg bg-stone-100 hover:bg-[#D9531E] text-stone-700 hover:text-white flex items-center justify-center transition-all shadow-xs"
+                  title="Send Email"
+                >
+                  <Mail className="w-4 h-4" />
+                </a>
+                {/* GitHub */}
+                <a
+                  href="https://github.com/aravindachar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-lg bg-stone-100 hover:bg-stone-900 text-stone-700 hover:text-white flex items-center justify-center transition-all shadow-xs"
+                  title="GitHub Profile"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-        
-        <div style={{ borderTop: '1px solid rgba(15, 23, 42, 0.08)', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1200px', margin: '0 auto', boxSizing: 'border-box', flexWrap: 'wrap', gap: '16px' }}>
-          <p style={{ fontSize: '12px', color: '#64748B', margin: 0 }}>
+
+        {/* Bottom Sub-bar */}
+        <div className="max-w-[1300px] mx-auto pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
+          <div>
             © 2026 DEVILSTONE. Designed and copywritten for aspiring guitarists.
-          </p>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <span style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#0F172A'} onMouseLeave={(e) => e.currentTarget.style.color = '#64748B'}>Privacy Policy</span>
-            <span style={{ fontSize: '12px', color: '#64748B', cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#0F172A'} onMouseLeave={(e) => e.currentTarget.style.color = '#64748B'}>Terms of Service</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <span className="hover:text-stone-800 cursor-pointer transition-colors">Privacy Policy</span>
+            <span className="hover:text-stone-800 cursor-pointer transition-colors">Terms of Service</span>
+            <a href="#fretboard" className="hover:text-stone-800 transition-colors font-medium">Back to Top ↑</a>
           </div>
         </div>
       </footer>
+
+      <MaestroAssistant />
     </div>
   );
 }

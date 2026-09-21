@@ -11,7 +11,7 @@ export const useAudioContext = () => {
     if (!audioCtxRef.current) {
       const AudioCtx =
         window.AudioContext ||
-        (window as any).webkitAudioContext;
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       audioCtxRef.current = new AudioCtx();
     }
 

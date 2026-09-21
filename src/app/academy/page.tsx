@@ -5,6 +5,7 @@ import Sidebar, { Session, Subtopic } from '@/components/Sidebar';
 import LessonView from '@/components/LessonView';
 import { Loader2, Compass } from 'lucide-react';
 import Link from 'next/link';
+import MaestroAssistant from '@/components/Assistant/MaestroAssistant';
 
 export default function AcademyPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -161,6 +162,7 @@ export default function AcademyPage() {
           onToggleComplete={handleToggleComplete}
         />
       </div>
+      <MaestroAssistant />
     </main>
   );
 }

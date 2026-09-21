@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import BackgroundCanvas from "@/components/reactbits/BackgroundCanvas";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,13 +24,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col relative">
-        {/* GPU-Accelerated Background Blobs */}
-        <div className="bg-mesh-container">
-          <div className="bg-blob blob-cyan" />
-          <div className="bg-blob blob-purple" />
-          <div className="bg-blob blob-amber" />
-        </div>
+      <body className="min-h-full flex flex-col relative bg-[#FAF7EE] text-slate-900">
+        <BackgroundCanvas />
         {children}
       </body>
     </html>

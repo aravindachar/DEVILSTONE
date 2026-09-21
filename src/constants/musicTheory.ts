@@ -76,6 +76,51 @@ export const INTERVAL_MAP: Record<number, string> = {
   11: '7',
 };
 
+export const DEGREE_MAP: Record<number, string> = {
+  0: '1',
+  1: '♭2',
+  2: '2',
+  3: '♭3',
+  4: '3',
+  5: '4',
+  6: '♭5',
+  7: '5',
+  8: '♭6',
+  9: '6',
+  10: '♭7',
+  11: '7',
+};
+
+export const INTERVAL_SHORT_MAP: Record<number, string> = {
+  0: 'R',
+  1: 'm2',
+  2: 'M2',
+  3: 'm3',
+  4: 'M3',
+  5: 'P4',
+  6: 'd5',
+  7: 'P5',
+  8: 'm6',
+  9: 'M6',
+  10: 'm7',
+  11: 'M7',
+};
+
+export const INTERVAL_LONG_MAP: Record<number, string> = {
+  0: 'Root',
+  1: 'Minor 2nd',
+  2: 'Major 2nd',
+  3: 'Minor 3rd',
+  4: 'Major 3rd',
+  5: 'Perfect 4th',
+  6: 'Tritone (dim 5th)',
+  7: 'Perfect 5th',
+  8: 'Minor 6th',
+  9: 'Major 6th',
+  10: 'Minor 7th',
+  11: 'Major 7th',
+};
+
 // Double-markers at 12 and 24, single at 3, 5, 7, 9, 15, 17, 19, 21
 export const FRET_MARKERS = {
   single: [3, 5, 7, 9, 15, 17, 19, 21],

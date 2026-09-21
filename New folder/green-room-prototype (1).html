@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Green Room — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: linear-gradient(150deg, #f7f8fa 0%, #f2f4f7 28%, #eef1f5 58%, #f6eef1 82%, #f9e9ee 100%);
+    --surface:rgba(255,255,255,0.65);
+    --surface-2:rgba(255,255,255,0.42);
+    --border:rgba(27,29,33,0.08);
+    --text:#1b1d21;
+    --text-muted:#5c6472;
+    --accent:#df3e64;
+    --accent-2:#6887a2;
+    --accent-soft:rgba(223,62,100,0.14);
+    --accent-deep:#b8294b;
+    --learning:#6887a2;
+    --learning-bg:rgba(104,135,162,0.15);
+    --rehearsing:#d98a2b;
+    --rehearsing-bg:rgba(217,138,43,0.16);
+    --ready:#b8294b;
+    --ready-bg:rgba(184,41,75,0.13);
+    --shadow: 0 1px 2px rgba(27,29,33,0.05), 0 8px 20px rgba(27,29,33,0.08);
+  }
+  body.dark{
+    --bg: linear-gradient(150deg, #14161a 0%, #1b1d21 26%, #1c2128 55%, #221a20 80%, #291821 100%);
+    --surface:rgba(38,41,47,0.55);
+    --surface-2:rgba(46,50,58,0.45);
+    --border:rgba(238,242,238,0.09);
+    --text:#f3f4f6;
+    --text-muted:#9aa1ab;
+    --accent:#df3e64;
+    --accent-2:#6887a2;
+    --accent-soft:rgba(223,62,100,0.2);
+    --accent-deep:#f0688a;
+    --learning:#6887a2;
+    --learning-bg:rgba(104,135,162,0.2);
+    --rehearsing:#e8a33d;
+    --rehearsing-bg:rgba(232,163,61,0.18);
+    --ready:#f0688a;
+    --ready-bg:rgba(240,104,138,0.18);
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 10px 24px rgba(0,0,0,0.5);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; padding:0;}
+  body{
+    background:#e9ece7; font-family:'Inter',sans-serif; color:var(--text);
+    display:flex; flex-direction:column; align-items:center; padding:50px 16px 90px;
+    transition:background .3s ease;
+  }
+  body.dark{background:#0a0c0e;}
+  .caption{color:#6f7a72; font-family:'Inter',sans-serif; font-size:13px; margin-bottom:22px; text-align:center;}
+  body.dark .caption{color:#7a8590;}
+  .caption b{color:#171e19;}
+  body.dark .caption b{color:#eef2ee;}
+
+  .display{font-family:'Poppins',sans-serif;}
+  .stat-card, .breakdown, .row-item, .song-card, .card, .reh-card, .member-card,
+  .settings-row, .search, .segmented, .theme-toggle, .seg-pill, .tabbar, .transpose, .chart{
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  /* ===== phone shell ===== */
+  .phone{
+    width:390px; height:844px; border-radius:52px; background:#0d0f11; padding:12px;
+    box-shadow:0 30px 70px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.04);
+    position:relative;
+  }
+  .screen-wrap{
+    width:100%; height:100%; border-radius:42px; background:var(--bg); overflow:hidden;
+    position:relative; display:flex; flex-direction:column; transition:background .3s ease;
+  }
+  .notch{
+    position:absolute; top:16px; left:50%; transform:translateX(-50%);
+    width:110px; height:26px; background:#0d0f11; border-radius:20px; z-index:30;
+  }
+  .statusbar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:16px 26px 6px; font-size:13px; font-weight:600; color:var(--text); flex-shrink:0;
+  }
+
+  /* ===== app header ===== */
+  .app-header{
+    padding:10px 20px 16px; display:flex; justify-content:space-between; align-items:flex-start; flex-shrink:0;
+  }
+  .greeting .hi{color:var(--text-muted); font-size:13px; margin-bottom:2px;}
+  .greeting .name{font-family:'Poppins',sans-serif; font-weight:600; font-size:21px;}
+  .header-actions{display:flex; align-items:center; gap:10px;}
+  .theme-toggle{
+    position:absolute; top:58px; right:18px; z-index:25;
+    width:42px; height:42px; border-radius:50%; background:var(--surface); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    box-shadow:0 8px 18px rgba(23,30,25,0.18), 0 2px 6px rgba(23,30,25,0.1);
+    color:var(--text);
+  }
+  body.dark .theme-toggle{box-shadow:0 8px 18px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);}
+  .theme-toggle svg{width:18px; height:18px;}
+
+  /* ===== scroll content ===== */
+  .content{flex:1; overflow-y:auto; padding:0 20px 16px; scrollbar-width:none;}
+  .content::-webkit-scrollbar{display:none;}
+  .screen{display:none;}
+  .screen.active{display:block; animation:fade .2s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  h1.page-title{font-family:'Poppins',sans-serif; font-size:22px; font-weight:600; margin:4px 0 4px;}
+  .page-sub{color:var(--text-muted); font-size:12.5px; margin:0 0 18px;}
+
+  /* ===== stat row ===== */
+  .quick-actions{display:flex; gap:10px; margin-bottom:22px;}
+  .qa-btn{
+    flex:1; height:52px; border-radius:14px; background:var(--surface); border:1px solid var(--border);
+    backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); box-shadow:var(--shadow);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer;
+    color:var(--text-muted);
+  }
+  .qa-btn svg{width:17px; height:17px;}
+  .qa-btn span{font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.02em;}
+  .qa-btn.primary{background:var(--accent); border:none; color:var(--accent-2);}
+  .stat-card{
+    flex:1; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px 12px;
+    box-shadow:var(--shadow);
+  }
+  .stat-card .num{font-family:'Poppins',sans-serif; font-weight:700; font-size:24px;}
+  .stat-card .num.ready{color:var(--ready);}
+  .stat-card .num.rehearsing{color:var(--rehearsing);}
+  .stat-card .num.learning{color:var(--learning);}
+  .stat-card .label{color:var(--text-muted); font-size:10.5px; margin-top:4px; text-transform:uppercase; letter-spacing:0.03em;}
+
+  /* breakdown bar */
+  .breakdown{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:22px; box-shadow:var(--shadow);}
+  .breakdown .top{display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-muted); margin-bottom:8px;}
+  .bar{height:9px; border-radius:6px; overflow:hidden; display:flex; background:var(--border);}
+  .bar .seg.ready{background:var(--ready);}
+  .bar .seg.rehearsing{background:var(--rehearsing);}
+  .bar .seg.learning{background:var(--learning);}
+  .legend{display:flex; gap:14px; margin-top:10px; font-size:11px; color:var(--text-muted);}
+  .legend span{display:flex; align-items:center; gap:5px;}
+  .legend .dot{width:7px; height:7px; border-radius:50%;}
+
+  /* ===== section head ===== */
+  .section-head{display:flex; justify-content:space-between; align-items:center; margin:0 0 10px;}
+  .section-head h2{font-family:'Poppins',sans-serif; font-size:14.5px; font-weight:600; margin:0;}
+  .section-head .link{color:var(--accent); font-size:12px; font-weight:600;}
+
+  /* ===== list rows ===== */
+  .row-list{display:flex; flex-direction:column; gap:8px; margin-bottom:20px;}
+  .row-item{
+    display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--surface);
+    border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); cursor:pointer;
+  }
+  .row-item .title{font-weight:600; font-size:13.5px;}
+  .row-item .meta{color:var(--text-muted); font-size:11.5px; margin-top:1px;}
+  .row-item .spacer{flex:1;}
+
+  .badge{width:36px; height:36px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-family:'Poppins',sans-serif; font-weight:600; font-size:12px; color:#fff; flex-shrink:0;}
+
+  .pill{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; padding:4px 9px; border-radius:20px; white-space:nowrap;}
+  .pill.learning{background:var(--learning-bg); color:var(--learning);}
+  .pill.rehearsing{background:var(--rehearsing-bg); color:var(--rehearsing);}
+  .pill.ready{background:var(--ready-bg); color:var(--ready);}
+
+  .dots{display:flex; gap:3px;}
+  .dot{width:6px; height:6px; border-radius:50%; background:var(--border);}
+  .dot.filled{background:var(--accent);}
+
+  /* ===== song library ===== */
+  .search{
+    width:100%; background:var(--surface); border:1px solid var(--border); border-radius:13px;
+    padding:11px 14px; font-size:13px; color:var(--text); font-family:inherit; margin-bottom:12px; box-shadow:var(--shadow);
+  }
+  .search::placeholder{color:var(--text-muted);}
+  .filter-row{display:flex; gap:8px; margin-bottom:16px; overflow-x:auto;}
+  .seg-pill{
+    background:var(--surface); border:1px solid var(--border); color:var(--text-muted); font-size:12px;
+    font-weight:600; padding:8px 14px; border-radius:20px; white-space:nowrap; cursor:pointer;
+  }
+  .seg-pill.active{background:var(--accent); border-color:var(--accent); color:#fff;}
+
+  .song-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px;
+    box-shadow:var(--shadow); margin-bottom:10px; cursor:pointer;
+  }
+  .song-card .top{display:flex; justify-content:space-between; align-items:flex-start;}
+  .song-card h3{margin:0 0 2px; font-size:14.5px; font-weight:600;}
+  .song-card .artist{color:var(--text-muted); font-size:11.5px;}
+  .song-card .footer{display:flex; justify-content:space-between; align-items:center; margin-top:12px;}
+  .key-pill{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-muted); border:1px solid var(--border); border-radius:6px; padding:2px 7px;}
+
+  /* ===== song detail ===== */
+  .back-link{color:var(--text-muted); font-size:12.5px; margin-bottom:12px; display:flex; align-items:center; gap:5px; cursor:pointer;}
+  .detail-top h1{font-family:'Poppins',sans-serif; font-size:21px; font-weight:600; margin:0 0 2px;}
+  .detail-top .artist{color:var(--text-muted); font-size:12.5px; margin-bottom:14px;}
+
+  .segmented{display:flex; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:3px; margin-bottom:16px; box-shadow:var(--shadow);}
+  .segmented button{
+    flex:1; border:none; background:transparent; color:var(--text-muted); font-size:11.5px; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.02em; padding:9px 4px; border-radius:9px; cursor:pointer; font-family:inherit;
+  }
+  .segmented button.sel.learning{background:var(--learning-bg); color:var(--learning);}
+  .segmented button.sel.rehearsing{background:var(--rehearsing-bg); color:var(--rehearsing);}
+  .segmented button.sel.ready{background:var(--ready-bg); color:var(--ready);}
+
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:var(--shadow); margin-bottom:14px;}
+  .card h4{margin:0 0 12px; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); font-weight:700;}
+
+  .rehearsal-count-row{display:flex; align-items:center; justify-content:space-between;}
+  .rehearsal-count-row .num{font-family:'Poppins',sans-serif; font-weight:700; font-size:28px; color:var(--accent);}
+  .log-btn{
+    width:100%; margin-top:12px; background:var(--accent); color:var(--accent-2); border:none; padding:11px;
+    border-radius:11px; font-weight:700; font-size:12.5px; cursor:pointer; font-family:inherit;
+  }
+
+  .transpose-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .transpose{display:flex; align-items:center; gap:8px; background:var(--surface-2); border-radius:10px; padding:5px 6px;}
+  .transpose button{width:26px; height:26px; border-radius:7px; border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; font-size:15px;}
+  .transpose .val{font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--text-muted); min-width:56px; text-align:center;}
+
+  .chart{background:var(--surface-2); border-radius:12px; padding:14px; font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.5;}
+  .chart .section-label{color:var(--accent-deep); font-weight:700; text-transform:uppercase; font-size:10.5px; letter-spacing:0.05em; margin:12px 0 4px;}
+  .chart .section-label:first-child{margin-top:0;}
+  .chart .chords{color:var(--accent); white-space:pre; margin:0;}
+  .chart .lyrics{color:var(--text); white-space:pre; margin:0 0 8px;}
+
+  .member-row{display:flex; align-items:center; gap:9px; padding:7px 0; border-bottom:1px solid var(--border); font-size:12.5px;}
+  .member-row:last-child{border-bottom:none;}
+  .avatar-sm{width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; flex-shrink:0;}
+  .member-row .inst{color:var(--text-muted); font-size:11px; margin-left:auto;}
+
+  /* ===== rehearsals ===== */
+  .reh-card{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; box-shadow:var(--shadow); margin-bottom:10px;}
+  .reh-card .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+  .reh-card .date{font-family:'Poppins',sans-serif; font-weight:600; font-size:14.5px;}
+  .reh-card .attend{color:var(--text-muted); font-size:11px;}
+  .song-chips{display:flex; flex-wrap:wrap; gap:5px; margin-bottom:8px;}
+  .song-chip{background:var(--surface-2); border:1px solid var(--border); border-radius:7px; padding:3px 8px; font-size:11px;}
+  .reh-note{color:var(--text-muted); font-size:11.5px; font-style:italic;}
+
+  .fab{
+    position:absolute; bottom:92px; right:20px; width:52px; height:52px; border-radius:16px;
+    background:var(--accent); color:var(--accent-2); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 24px rgba(18,40,42,0.3); cursor:pointer; z-index:20; border:none;
+  }
+
+  /* ===== members ===== */
+  .member-card{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:14px; box-shadow:var(--shadow); margin-bottom:10px; display:flex; gap:12px; align-items:center;}
+  .avatar-lg{width:42px; height:42px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Poppins',sans-serif; font-weight:600; font-size:14px; color:#fff; flex-shrink:0;}
+  .member-card h3{margin:0 0 1px; font-size:14px; font-weight:600;}
+  .member-card .role{color:var(--accent); font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.02em;}
+  .member-card .songs{color:var(--text-muted); font-size:11px; margin-top:2px;}
+
+  /* ===== settings ===== */
+  .settings-row{display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:10px; box-shadow:var(--shadow);}
+  .settings-row .label{font-size:13.5px; font-weight:600;}
+  .settings-row .sub{color:var(--text-muted); font-size:11px; margin-top:2px;}
+  .switch{width:44px; height:26px; border-radius:14px; background:var(--border); position:relative; cursor:pointer; transition:background .2s;}
+  .switch.on{background:var(--accent);}
+  .switch .knob{position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+  .switch.on .knob{transform:translateX(18px);}
+
+  /* ===== tab bar (expandable) ===== */
+  .tabbar{
+    display:flex; gap:6px; padding:10px 14px calc(env(safe-area-inset-bottom, 0px) + 14px);
+    background:var(--surface); border-top:1px solid var(--border); flex-shrink:0;
+  }
+  .tab{
+    flex:1; height:44px; border-radius:16px; border:none; background:transparent;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    color:var(--text-muted); transition:background .2s ease, color .2s ease;
+  }
+  .tab svg{width:20px; height:20px; flex-shrink:0;}
+  .tab span{display:none;}
+  .tab.active{background:var(--accent-soft); color:var(--accent-deep);}
+</style>
+</head>
+<body class="dark">
+
+<p class="caption"><b>Green Room</b> — interactive prototype · tap the tabs and header icon inside the frame</p>
+
+<div class="phone">
+  <div class="screen-wrap">
+    <div class="notch"></div>
+    <div class="statusbar">
+      <span>9:41</span>
+      <span>••• 🔋</span>
+    </div>
+
+    <div class="app-header">
+      <div class="greeting">
+        <div class="hi">Good evening,</div>
+        <div class="name display">Aravinda</div>
+      </div>
+    </div>
+
+    <div class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </div>
+
+    <div class="content">
+
+      <!-- ============ DASHBOARD ============ -->
+      <div class="screen active" id="dashboard">
+        <p class="page-sub">The Backline · 6 members</p>
+
+        <div class="quick-actions">
+          <div class="qa-btn" data-goto="songs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            <span>Songs</span>
+          </div>
+          <div class="qa-btn" data-goto="members">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            <span>Invite</span>
+          </div>
+          <div class="qa-btn" data-goto="rehearsals">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <span>Log</span>
+          </div>
+          <div class="qa-btn primary" id="qaAdd">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>Add song</span>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card"><div class="num ready">3</div><div class="label">Ready</div></div>
+          <div class="stat-card"><div class="num rehearsing">4</div><div class="label">Rehearsing</div></div>
+          <div class="stat-card"><div class="num learning">5</div><div class="label">Learning</div></div>
+        </div>
+
+        <div class="breakdown">
+          <div class="top"><span>Song status breakdown</span><span>12 total</span></div>
+          <div class="bar">
+            <div class="seg ready" style="width:25%"></div>
+            <div class="seg rehearsing" style="width:33%"></div>
+            <div class="seg learning" style="width:42%"></div>
+          </div>
+          <div class="legend">
+            <span><span class="dot" style="background:var(--ready)"></span>Ready</span>
+            <span><span class="dot" style="background:var(--rehearsing)"></span>Rehearsing</span>
+            <span><span class="dot" style="background:var(--learning)"></span>Learning</span>
+          </div>
+        </div>
+
+        <div class="section-head"><h2>Needs work before Friday</h2><span class="link" data-goto="songs">All →</span></div>
+        <div class="row-list">
+          <div class="row-item" data-goto="detail">
+            <div class="badge" style="background:#e8a33d;">W</div>
+            <div><div class="title">Wonderwall</div><div class="meta">Oasis · Em</div></div>
+            <span class="spacer"></span>
+            <div class="dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot"></span><span class="dot"></span></div>
+          </div>
+          <div class="row-item" data-goto="detail">
+            <div class="badge" style="background:#6c8ee0;">R</div>
+            <div><div class="title">Riptide</div><div class="meta">Vance Joy · Am</div></div>
+            <span class="spacer"></span>
+            <div class="dots"><span class="dot filled"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          </div>
+          <div class="row-item" data-goto="detail">
+            <div class="badge" style="background:#b8294b;">R</div>
+            <div><div class="title">Redemption Song</div><div class="meta">Bob Marley · G</div></div>
+            <span class="spacer"></span>
+            <div class="dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot"></span></div>
+          </div>
+        </div>
+
+        <div class="section-head"><h2>Recent rehearsals</h2><span class="link" data-goto="rehearsals">Log →</span></div>
+        <div class="row-list">
+          <div class="row-item" data-goto="rehearsals">
+            <div class="badge" style="background:#8b93a3;">29</div>
+            <div><div class="title">Tue, 29 Jul</div><div class="meta">4 songs · 5 of 6 attended</div></div>
+          </div>
+          <div class="row-item" data-goto="rehearsals">
+            <div class="badge" style="background:#8b93a3;">26</div>
+            <div><div class="title">Sat, 26 Jul</div><div class="meta">3 songs · 6 of 6 attended</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SONG LIBRARY ============ -->
+      <div class="screen" id="songs">
+        <h1 class="page-title">Song Library</h1>
+        <input class="search" placeholder="Search songs or artists…">
+        <div class="filter-row">
+          <span class="seg-pill active">All</span>
+          <span class="seg-pill">Learning</span>
+          <span class="seg-pill">Rehearsing</span>
+          <span class="seg-pill">Ready</span>
+        </div>
+
+        <div class="song-card" data-goto="detail">
+          <div class="top"><div><h3>Wonderwall</h3><div class="artist">Oasis</div></div><span class="pill rehearsing">Rehearsing</span></div>
+          <div class="footer"><span class="key-pill">Em</span><div class="dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot"></span><span class="dot"></span></div></div>
+        </div>
+        <div class="song-card">
+          <div class="top"><div><h3>Redemption Song</h3><div class="artist">Bob Marley</div></div><span class="pill rehearsing">Rehearsing</span></div>
+          <div class="footer"><span class="key-pill">G</span><div class="dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot"></span></div></div>
+        </div>
+        <div class="song-card">
+          <div class="top"><div><h3>Riptide</h3><div class="artist">Vance Joy</div></div><span class="pill learning">Learning</span></div>
+          <div class="footer"><span class="key-pill">Am</span><div class="dots"><span class="dot filled"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+        </div>
+        <div class="song-card">
+          <div class="top"><div><h3>Banana Pancakes</h3><div class="artist">Jack Johnson</div></div><span class="pill ready">Ready</span></div>
+          <div class="footer"><span class="key-pill">D</span><div class="dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span></div></div>
+        </div>
+        <div class="song-card">
+          <div class="top"><div><h3>Chasing Cars</h3><div class="artist">Snow Patrol</div></div><span class="pill ready">Ready</span></div>
+          <div class="footer"><span class="key-pill">A</span><div class="dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span></div></div>
+        </div>
+      </div>
+
+      <!-- ============ SONG DETAIL ============ -->
+      <div class="screen" id="detail">
+        <div class="back-link" data-goto="songs">← Song library</div>
+        <div class="detail-top">
+          <h1>Wonderwall</h1>
+          <div class="artist">Oasis · 4/4 · originally Em</div>
+        </div>
+
+        <div class="segmented">
+          <button class="learning">Learning</button>
+          <button class="sel rehearsing">Rehearsing</button>
+          <button class="ready">Ready</button>
+        </div>
+
+        <div class="card">
+          <h4>Rehearsal count</h4>
+          <div class="rehearsal-count-row">
+            <div class="num">4</div>
+            <div class="dots"><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot filled"></span><span class="dot"></span></div>
+          </div>
+          <button class="log-btn">Log this rehearsal</button>
+        </div>
+
+        <div class="card">
+          <h4>Chart</h4>
+          <div class="transpose-row">
+            <span style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Capo / Transpose</span>
+            <div class="transpose">
+              <button id="tDown">−</button>
+              <span class="val" id="tVal">0 · Em</span>
+              <button id="tUp">+</button>
+            </div>
+          </div>
+          <div class="chart" id="chart">
+            <div class="section-label">Verse 1</div>
+            <p class="chords" id="c0">Em            G</p>
+            <p class="lyrics">Sample lyric line for demo</p>
+            <p class="chords" id="c1">D             A</p>
+            <p class="lyrics">Sample lyric line, chord spacing shown</p>
+            <div class="section-label">Chorus</div>
+            <p class="chords" id="c2">C        G       D</p>
+            <p class="lyrics">Sample chorus hook line here</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4>Assigned to</h4>
+          <div class="member-row"><div class="avatar-sm" style="background:#b8294b;">AK</div>Aravinda<span class="inst">Lead guitar, vocals</span></div>
+          <div class="member-row"><div class="avatar-sm" style="background:#6c8ee0;">RS</div>Rhea<span class="inst">Rhythm guitar</span></div>
+          <div class="member-row"><div class="avatar-sm" style="background:#d98a2b;">DV</div>Dev<span class="inst">Bass</span></div>
+        </div>
+      </div>
+
+      <!-- ============ REHEARSALS ============ -->
+      <div class="screen" id="rehearsals">
+        <h1 class="page-title">Rehearsal Log</h1>
+        <p class="page-sub">Every session, and what got covered.</p>
+
+        <div class="reh-card">
+          <div class="top"><div class="date">Tue, 29 Jul</div><div class="attend">5 of 6 attended</div></div>
+          <div class="song-chips">
+            <span class="song-chip">Wonderwall</span><span class="song-chip">Redemption Song</span>
+            <span class="song-chip">Riptide</span><span class="song-chip">Chasing Cars</span>
+          </div>
+          <div class="reh-note">"Wonderwall chorus is tighter now."</div>
+        </div>
+        <div class="reh-card">
+          <div class="top"><div class="date">Sat, 26 Jul</div><div class="attend">6 of 6 attended</div></div>
+          <div class="song-chips">
+            <span class="song-chip">Wonderwall</span><span class="song-chip">Banana Pancakes</span><span class="song-chip">Skinny Love</span>
+          </div>
+          <div class="reh-note">"First run of Skinny Love — rough start."</div>
+        </div>
+        <div class="reh-card">
+          <div class="top"><div class="date">Tue, 22 Jul</div><div class="attend">4 of 6 attended</div></div>
+          <div class="song-chips">
+            <span class="song-chip">Redemption Song</span><span class="song-chip">Chasing Cars</span>
+          </div>
+          <div class="reh-note">"Short session, vocal harmonies only."</div>
+        </div>
+      </div>
+
+      <!-- ============ MEMBERS ============ -->
+      <div class="screen" id="members">
+        <h1 class="page-title">Members</h1>
+        <p class="page-sub">The Backline · 6 people</p>
+
+        <div class="member-card">
+          <div class="avatar-lg" style="background:#b8294b;">AK</div>
+          <div><h3>Aravinda</h3><div class="role">Lead guitar · Vocals</div><div class="songs">8 of 12 songs</div></div>
+        </div>
+        <div class="member-card">
+          <div class="avatar-lg" style="background:#6c8ee0;">RS</div>
+          <div><h3>Rhea</h3><div class="role">Rhythm guitar</div><div class="songs">6 of 12 songs</div></div>
+        </div>
+        <div class="member-card">
+          <div class="avatar-lg" style="background:#d98a2b;">DV</div>
+          <div><h3>Dev</h3><div class="role">Bass</div><div class="songs">9 of 12 songs</div></div>
+        </div>
+        <div class="member-card">
+          <div class="avatar-lg" style="background:#c1543c;">NM</div>
+          <div><h3>Nisha</h3><div class="role">Drums</div><div class="songs">12 of 12 songs</div></div>
+        </div>
+      </div>
+
+      <!-- ============ SETTINGS ============ -->
+      <div class="screen" id="settings">
+        <h1 class="page-title">Settings</h1>
+        <p class="page-sub">Aravinda · The Backline</p>
+
+        <div class="settings-row">
+          <div><div class="label">Dark mode</div><div class="sub">Applies across the whole app</div></div>
+          <div class="switch" id="settingsSwitch"><div class="knob"></div></div>
+        </div>
+        <div class="settings-row">
+          <div><div class="label">Active group</div><div class="sub">The Backline</div></div>
+          <span style="color:var(--text-muted); font-size:18px;">›</span>
+        </div>
+        <div class="settings-row">
+          <div><div class="label">Invite a member</div><div class="sub">Share join code</div></div>
+          <span style="color:var(--text-muted); font-size:18px;">›</span>
+        </div>
+        <div class="settings-row">
+          <div><div class="label">Profile</div><div class="sub">Name, instrument, photo</div></div>
+          <span style="color:var(--text-muted); font-size:18px;">›</span>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="fab" id="fabBtn" title="Log rehearsal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+
+    <div class="tabbar">
+      <button class="tab active" data-target="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+        <span>Home</span>
+      </button>
+      <button class="tab" data-target="songs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        <span>Songs</span>
+      </button>
+      <button class="tab" data-target="rehearsals">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span>Rehearsals</span>
+      </button>
+      <button class="tab" data-target="members">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Members</span>
+      </button>
+      <button class="tab" data-target="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ---- tab navigation ----
+  const tabs = document.querySelectorAll('.tab');
+  const screens = document.querySelectorAll('.screen');
+  function showScreen(id){
+    screens.forEach(s => s.classList.toggle('active', s.id === id));
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.target === id));
+    document.querySelector('.content').scrollTo({top:0});
+  }
+  tabs.forEach(t => t.addEventListener('click', () => showScreen(t.dataset.target)));
+  document.querySelectorAll('[data-goto]').forEach(el => el.addEventListener('click', () => showScreen(el.dataset.goto)));
+  document.getElementById('fabBtn').addEventListener('click', () => showScreen('rehearsals'));
+  document.getElementById('qaAdd').addEventListener('click', () => showScreen('songs'));
+
+  // ---- dark mode ----
+  const sunSvg = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  const brightSvg = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>';
+  function setDark(on){
+    document.body.classList.toggle('dark', on);
+    document.getElementById('themeIcon').innerHTML = on ? brightSvg : sunSvg;
+    document.getElementById('settingsSwitch').classList.toggle('on', on);
+  }
+  document.getElementById('themeToggle').addEventListener('click', () => setDark(!document.body.classList.contains('dark')));
+  document.getElementById('settingsSwitch').addEventListener('click', () => setDark(!document.body.classList.contains('dark')));
+  setDark(true); // dark theme is now the default
+
+  // ---- status segmented control ----
+  document.querySelectorAll('.segmented button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.segmented button').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+    });
+  });
+
+  // ---- filter pills ----
+  document.querySelectorAll('.filter-row .seg-pill').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-row .seg-pill').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+
+  // ---- live transpose ----
+  const NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  const originals = {};
+  document.querySelectorAll('.chart .chords').forEach(el => originals[el.id] = el.textContent);
+  let semitone = 0;
+  const tVal = document.getElementById('tVal');
+  function transposeChord(chord, steps){
+    const m = chord.match(/^([A-G][#b]?)(.*)$/);
+    if(!m) return chord;
+    let [, root, rest] = m;
+    root = root.replace('b','#');
+    let idx = NOTES.indexOf(root);
+    if(idx === -1) return chord;
+    idx = (idx + steps + 12) % 12;
+    return NOTES[idx] + rest;
+  }
+  function renderTranspose(){
+    Object.keys(originals).forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = originals[id].replace(/[A-G][#b]?[a-zA-Z0-9]*/g, m => transposeChord(m, semitone));
+    });
+    tVal.textContent = `${semitone >= 0 ? '+' : ''}${semitone} · ${semitone===0 ? 'Em' : transposeChord('Em', semitone)}`;
+  }
+  document.getElementById('tUp').addEventListener('click', () => { semitone++; renderTranspose(); });
+  document.getElementById('tDown').addEventListener('click', () => { semitone--; renderTranspose(); });
+</script>
+
+</body>
+</html>

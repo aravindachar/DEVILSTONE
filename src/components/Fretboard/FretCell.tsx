@@ -1,7 +1,7 @@
 import React from 'react';
-import { THEME } from '../../constants/theme';
 import { FRET_MARKERS } from '../../constants/musicTheory';
 import { useApp } from '../../context/AppContext';
+import { getFretWidth } from '../../utils/theoryEngine';
 
 interface FretCellProps {
   fretIdx: number;
@@ -16,32 +16,40 @@ export const FretCell: React.FC<FretCellProps> = ({
   children,
   isMini = false,
 }) => {
-  const { currentTuningNotes } = useApp();
+  const { currentTuningNotes, capoFret } = useApp();
   const numStrings = currentTuningNotes.length;
 
   const isSingleMarker = FRET_MARKERS.single.includes(fretIdx);
   const isDoubleMarker = FRET_MARKERS.double.includes(fretIdx);
 
+  const isBehindCapo = capoFret > 0 && fretIdx < capoFret;
+  const isCapoFret = capoFret > 0 && fretIdx === capoFret;
+
+  const cellWidth = getFretWidth(fretIdx, isMini);
+
   const cellStyle: React.CSSProperties = {
-    flex: 1,
+    width: `${cellWidth}px`,
+    minWidth: `${cellWidth}px`,
+    maxWidth: `${cellWidth}px`,
     height: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
     position: 'relative',
-    borderRight: fretIdx === 0 ? 'none' : `3px solid ${THEME.colors.fretLine}`,
-    backgroundColor: fretIdx === 0 ? '#E2E8F0' : 'transparent', // Differentiate the Nut column
-    minWidth: isMini 
-      ? (fretIdx === 0 ? '40px' : '32px') 
-      : (fretIdx === 0 ? '55px' : '45px'),
+    backgroundColor: fretIdx === 0 
+      ? '#FAF8F2' // Bleached/vintage bone nut block
+      : (isBehindCapo ? 'rgba(100, 60, 20, 0.15)' : 'transparent'),
+    opacity: isBehindCapo ? 0.35 : 1,
   };
 
   const dotStyle: React.CSSProperties = {
     position: 'absolute',
     width: isMini ? '6px' : '10px',
     height: isMini ? '6px' : '10px',
-    backgroundColor: THEME.colors.fretDot,
+    // Iconic Black Phenolic Inlay Dot for Maple fingerboards
+    background: 'radial-gradient(circle at 35% 35%, #27272A 0%, #18181B 65%, #09090B 100%)',
+    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 1px 2px rgba(80, 50, 20, 0.4)',
     borderRadius: '50%',
     zIndex: 1,
     left: '50%',
@@ -49,13 +57,7 @@ export const FretCell: React.FC<FretCellProps> = ({
     pointerEvents: 'none',
   };
 
-  // Determine single dot placement
-  // We want it centered vertically on the neck.
-  // For even string count (e.g. 4 or 6), the center is between the two middle strings.
-  // - 6 strings: index 2 and 3. We can put it on index 2 and offset it down, or index 3 and offset it up.
-  // - 4 strings: index 1 and 2. We can put it on index 1 and offset it down.
-  // For odd string count (e.g. 5), the center is exactly on the middle string.
-  // - 5 strings: index 2.
+  // Single dot placement (between middle strings)
   let showSingleDot = false;
   let singleDotOffsetStyle: React.CSSProperties = {};
 
@@ -63,13 +65,11 @@ export const FretCell: React.FC<FretCellProps> = ({
     if (numStrings === 6) {
       if (stringIdx === 2) {
         showSingleDot = true;
-        // Position exactly between string 2 and string 3
         singleDotOffsetStyle = { bottom: '-5px' };
       }
     } else if (numStrings === 4) {
       if (stringIdx === 1) {
         showSingleDot = true;
-        // Position exactly between string 1 and string 2
         singleDotOffsetStyle = { bottom: '-5px' };
       }
     } else if (numStrings === 5) {
@@ -78,7 +78,6 @@ export const FretCell: React.FC<FretCellProps> = ({
         singleDotOffsetStyle = { top: '50%', transform: 'translate(-50%, -50%)' };
       }
     } else {
-      // Fallback
       if (stringIdx === Math.floor(numStrings / 2)) {
         showSingleDot = true;
         singleDotOffsetStyle = { top: '50%', transform: 'translate(-50%, -50%)' };
@@ -86,10 +85,7 @@ export const FretCell: React.FC<FretCellProps> = ({
     }
   }
 
-  // Determine double dot placement
-  // - 6 strings: on index 1 and 4
-  // - 4 strings: on index 0 and 2
-  // - 5 strings: on index 1 and 3
+  // Double dot placement (strings 1 and 4 on 6-string)
   let showDoubleDot = false;
   if (isDoubleMarker) {
     if (numStrings === 6) {
@@ -105,13 +101,66 @@ export const FretCell: React.FC<FretCellProps> = ({
 
   return (
     <div style={cellStyle}>
-      {/* Centered Inlay Fret Markers */}
+      {/* Centered Black Phenolic Fret Inlays */}
       {showSingleDot && (
         <div style={{ ...dotStyle, ...singleDotOffsetStyle }} />
       )}
       
       {showDoubleDot && (
         <div style={{ ...dotStyle, top: '50%', transform: 'translate(-50%, -50%)' }} />
+      )}
+
+      {/* Realistic Crowned Nickel-Silver Fret Wire (On all frets except Nut) */}
+      {fretIdx > 0 && (
+        <div
+          style={{
+            position: 'absolute',
+            right: '-1.5px',
+            top: 0,
+            bottom: 0,
+            width: isMini ? '2px' : '3px',
+            background: 'linear-gradient(90deg, #64748B 0%, #CBD5E1 30%, #FFFFFF 50%, #94A3B8 75%, #475569 100%)',
+            boxShadow: '1px 0 2px rgba(80,50,20,0.3), -0.5px 0 0.5px rgba(255,255,255,0.6)',
+            zIndex: 3,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+
+      {/* Bleached Vintage Bone Nut Edge */}
+      {fretIdx === 0 && (
+        <div
+          style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: isMini ? '3px' : '5px',
+            background: 'linear-gradient(90deg, #E5E0D8 0%, #FAF8F2 50%, #EFECE6 100%)',
+            borderRight: '1.5px solid rgba(80, 50, 20, 0.4)',
+            boxShadow: '1px 0 3px rgba(0,0,0,0.15)',
+            zIndex: 3,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+
+      {/* Visual Capo Bar Clamp */}
+      {isCapoFret && (
+        <div
+          style={{
+            position: 'absolute',
+            right: '-3px',
+            top: 0,
+            bottom: 0,
+            width: '6px',
+            background: 'linear-gradient(180deg, #38BDF8 0%, #00D7FF 50%, #0284C7 100%)',
+            boxShadow: '0 0 10px rgba(0, 215, 255, 0.8)',
+            borderRadius: '2px',
+            zIndex: 4,
+            pointerEvents: 'none',
+          }}
+        />
       )}
 
       {children}

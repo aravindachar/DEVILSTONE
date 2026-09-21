@@ -35,10 +35,11 @@ export async function POST(request: Request) {
       success: true,
       progress,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error toggling progress:', error);
+    const message = error instanceof Error ? error.message : 'Internal Server Error';
     return NextResponse.json(
-      { error: 'Internal Server Error', details: error.message },
+      { error: 'Internal Server Error', details: message },
       { status: 500 }
     );
   }

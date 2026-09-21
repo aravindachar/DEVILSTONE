@@ -65,6 +65,8 @@ export const useMetronome = ({
     activeTimeoutsRef.current = [];
   }, []);
 
+  const scheduleRef = useRef<() => void>(() => {});
+
   const scheduleMetronomeClick = useCallback(() => {
     const ctx = getAudioContext();
     const lookahead = 25.0; // ms
@@ -120,8 +122,14 @@ export const useMetronome = ({
       currentBeatRef.current = (currentBeatRef.current + 1) % 4;
     }
 
-    timerIdRef.current = window.setTimeout(scheduleMetronomeClick, lookahead);
+    timerIdRef.current = window.setTimeout(() => {
+      scheduleRef.current();
+    }, lookahead);
   }, [getAudioContext, getIsAccent]);
+
+  useEffect(() => {
+    scheduleRef.current = scheduleMetronomeClick;
+  }, [scheduleMetronomeClick]);
 
   const start = useCallback(() => {
     if (isPlayingRef.current) return;

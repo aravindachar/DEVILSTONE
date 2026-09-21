@@ -1,8 +1,9 @@
 import { NOTES } from '../types/music';
-import type { NoteName, ScaleType, CagedShape, DisplayMode } from '../types/music';
-import { TUNING_PRESETS, SCALES, INTERVAL_MAP } from '../constants/musicTheory';
+import type { NoteName, ScaleType, CagedShape, DisplayMode, NoteInspectionInfo, RelatedChord } from '../types/music';
+import { TUNING_PRESETS, SCALES, INTERVAL_MAP, DEGREE_MAP, INTERVAL_SHORT_MAP, INTERVAL_LONG_MAP } from '../constants/musicTheory';
+import { noteToFreq } from './audio';
 
-export { NOTES, TUNING_PRESETS, SCALES, INTERVAL_MAP };
+export { NOTES, TUNING_PRESETS, SCALES, INTERVAL_MAP, DEGREE_MAP, INTERVAL_SHORT_MAP, INTERVAL_LONG_MAP };
 
 /**
  * Checks if a scale is a minor scale.
@@ -56,16 +57,92 @@ export const getIntervalOffset = (note: NoteName, root: NoteName): number => {
 };
 
 /**
- * Returns the text label for a note (either name or interval) based on the display mode.
+ * Returns the text label for a note (name, degree, interval, octave, or empty for dot) based on the display mode.
  */
 export const getNoteLabel = (
   note: NoteName,
   root: NoteName,
-  mode: DisplayMode
+  mode: DisplayMode,
+  fullNote?: string
 ): string => {
   if (mode === 'notes') return note;
+  if (mode === 'dots') return '';
+  if (mode === 'octaves') return fullNote || note;
   const offset = getIntervalOffset(note, root);
-  return INTERVAL_MAP[offset] || 'R';
+  if (mode === 'degrees') return DEGREE_MAP[offset] || '1';
+  if (mode === 'intervals') return INTERVAL_SHORT_MAP[offset] || 'R';
+  return note;
+};
+
+/**
+ * Returns comprehensive inspection metadata for a hovered/selected fret note.
+ */
+export const getNoteInspectionInfo = (
+  note: NoteName,
+  root: NoteName,
+  fullNote: string
+): NoteInspectionInfo => {
+  const offset = getIntervalOffset(note, root);
+  return {
+    noteName: note,
+    fullNote,
+    degree: DEGREE_MAP[offset] || '1',
+    interval: INTERVAL_LONG_MAP[offset] || 'Root',
+    freq: Math.round(noteToFreq(fullNote) * 10) / 10,
+  };
+};
+
+/**
+ * Gets effective open note with capo offset applied.
+ */
+export const getEffectiveOpenNote = (openNoteWithOctave: string, capoFret: number): string => {
+  if (capoFret <= 0) return openNoteWithOctave;
+  const { fullNote } = getNoteAtFret(openNoteWithOctave, capoFret);
+  return fullNote;
+};
+
+export interface SequenceNote {
+  fullNote: string;
+  noteName: NoteName;
+  stringIdx: number;
+  fretIdx: number;
+  freq: number;
+}
+
+/**
+ * Generates an ordered ascending pitch sequence of scale notes for play-along practice.
+ */
+export const getScaleSequenceNotes = (
+  tuningNotes: string[],
+  activeScaleDegreeIndices: number[],
+  fretRange: [number, number] = [0, 12],
+  capoFret: number = 0
+): SequenceNote[] => {
+  const [startFret, endFret] = fretRange;
+  const effectiveStart = Math.max(startFret, capoFret);
+  const notesMap = new Map<number, SequenceNote>();
+
+  tuningNotes.forEach((openNote, stringIdx) => {
+    for (let fretIdx = effectiveStart; fretIdx <= endFret; fretIdx++) {
+      const { noteName, fullNote } = getNoteAtFret(openNote, fretIdx);
+      const noteIdx = NOTES.indexOf(noteName);
+      if (activeScaleDegreeIndices.includes(noteIdx)) {
+        const freq = noteToFreq(fullNote);
+        const roundedFreq = Math.round(freq);
+        if (!notesMap.has(roundedFreq)) {
+          notesMap.set(roundedFreq, {
+            fullNote,
+            noteName,
+            stringIdx,
+            fretIdx,
+            freq,
+          });
+        }
+      }
+    }
+  });
+
+  return Array.from(notesMap.values()).sort((a, b) => a.freq - b.freq);
 };
 
 /**
@@ -74,6 +151,16 @@ export const getNoteLabel = (
 export const isTriadNote = (offset: number, isMinor: boolean): boolean => {
   const third = isMinor ? 3 : 4;
   return offset === 0 || offset === third || offset === 7;
+};
+
+/**
+ * Calculates physically proportional fret widths (exponential taper from wide fret 1 to narrow fret 24).
+ */
+export const getFretWidth = (fretIdx: number, isMini = false): number => {
+  if (fretIdx === 0) return isMini ? 32 : 46; // Nut column
+  const baseWidth = isMini ? 44 : 74;
+  const taperRatio = 0.98; // Standard realistic guitar fret taper
+  return Math.max(isMini ? 26 : 42, Math.round(baseWidth * Math.pow(taperRatio, fretIdx - 1)));
 };
 
 /**
@@ -353,4 +440,76 @@ export const getScaleGrimoire = (
     notes,
     description: SCALE_GRIMOIRE[scale] || '',
   };
+};
+
+/**
+ * Returns semitone step progression string for a scale (e.g. "R, 2, 2, 1, 2, 2, 2")
+ */
+export const getScaleIntervalSteps = (scale: ScaleType): string => {
+  const intervals = SCALES[scale];
+  if (!intervals || intervals.length === 0) return 'R';
+  const steps: string[] = ['R'];
+  for (let i = 1; i < intervals.length; i++) {
+    steps.push((intervals[i] - intervals[i - 1]).toString());
+  }
+  return steps.join(', ');
+};
+
+/**
+ * Calculates 7 diatonic triad chords built from the 1st, 3rd, and 5th note of each scale degree.
+ */
+export const getRelatedChords = (rootKey: NoteName, scale: ScaleType): RelatedChord[] => {
+  let intervals = SCALES[scale];
+  // If scale is pentatonic or non-heptatonic, map to closest full diatonic parent scale for related chords
+  if (!intervals || intervals.length < 7) {
+    if (scale === 'Minor Pentatonic' || scale === 'Blues') {
+      intervals = SCALES['Natural Minor'];
+    } else {
+      intervals = SCALES['Major'];
+    }
+  }
+
+  const rootIndex = NOTES.indexOf(rootKey);
+  const scaleNotes: NoteName[] = intervals.slice(0, 7).map((int) => NOTES[(rootIndex + int) % 12]);
+
+  const romanNumeralsMajor = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'];
+  const romanNumeralsMinor = ['i', 'ii°', 'III', 'iv', 'v', 'VI', 'VII'];
+  const isMinor = isScaleMinor(scale);
+  const romanList = isMinor ? romanNumeralsMinor : romanNumeralsMajor;
+
+  return scaleNotes.map((rootNote, idx) => {
+    const thirdNote = scaleNotes[(idx + 2) % 7];
+    const fifthNote = scaleNotes[(idx + 4) % 7];
+
+    const thirdInterval = (NOTES.indexOf(thirdNote) - NOTES.indexOf(rootNote) + 12) % 12;
+    const fifthInterval = (NOTES.indexOf(fifthNote) - NOTES.indexOf(rootNote) + 12) % 12;
+
+    let quality: RelatedChord['quality'] = 'Major';
+    let chordSuffix = 'Major';
+
+    if (thirdInterval === 3 && fifthInterval === 7) {
+      quality = 'Minor';
+      chordSuffix = 'Minor';
+    } else if (thirdInterval === 4 && fifthInterval === 7) {
+      quality = 'Major';
+      chordSuffix = 'Major';
+    } else if (thirdInterval === 3 && fifthInterval === 6) {
+      quality = 'Diminished';
+      chordSuffix = 'Diminished';
+    } else if (thirdInterval === 4 && fifthInterval === 8) {
+      quality = 'Augmented';
+      chordSuffix = 'Augmented';
+    } else {
+      quality = 'Other';
+      chordSuffix = '';
+    }
+
+    return {
+      degree: idx + 1,
+      romanNumeral: romanList[idx] || `${idx + 1}`,
+      name: `${rootNote} ${chordSuffix} Chord`.trim(),
+      notes: [rootNote, thirdNote, fifthNote],
+      quality,
+    };
+  });
 };

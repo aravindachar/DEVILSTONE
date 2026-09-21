@@ -68,10 +68,11 @@ export async function GET() {
       userId: user.id,
       sessions: formattedSessions,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching sessions:', error);
+    const message = error instanceof Error ? error.message : 'Internal Server Error';
     return NextResponse.json(
-      { error: 'Internal Server Error', details: error.message },
+      { error: 'Internal Server Error', details: message },
       { status: 500 }
     );
   }

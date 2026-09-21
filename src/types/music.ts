@@ -64,7 +64,15 @@ export type InstrumentType = 'guitar' | 'bass-4' | 'bass-5';
 
 export type CagedShape = 'None' | 'C' | 'A' | 'G' | 'E' | 'D';
 
-export type DisplayMode = 'notes' | 'intervals';
+export type DisplayMode = 'notes' | 'degrees' | 'intervals' | 'octaves' | 'dots';
+
+export interface NoteInspectionInfo {
+  noteName: NoteName;
+  fullNote: string;
+  degree: string;
+  interval: string;
+  freq: number;
+}
 
 export type MetronomeAccent = 'none' | 'first' | 'one-three' | 'all';
 
@@ -72,4 +80,12 @@ export interface BeatState {
   currentBeat: number;
   currentSubdivision: number;
   isPlaying: boolean;
+}
+
+export interface RelatedChord {
+  degree: number;
+  romanNumeral: string;
+  name: string;
+  notes: NoteName[];
+  quality: 'Major' | 'Minor' | 'Diminished' | 'Augmented' | 'Other';
 }

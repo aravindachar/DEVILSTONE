@@ -5,6 +5,7 @@ import { getPentatonicPositionRange, getCagedRange, isScalePentatonic } from '..
 import { Fretboard } from '../Fretboard/Fretboard';
 import { THEME } from '../../constants/theme';
 import type { CagedShape } from '../../types/music';
+import { SpotlightCard } from '../reactbits/SpotlightCard';
 
 export const ShapeLibrary: React.FC = () => {
   const {
@@ -21,8 +22,8 @@ export const ShapeLibrary: React.FC = () => {
     WebkitBackdropFilter: 'blur(24px)',
     padding: '28px 30px',
     borderRadius: '24px',
-    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.5)',
-    border: '1px solid rgba(255, 255, 255, 0.4)',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
     marginBottom: '35px',
     transition: 'all 0.3s ease',
   };
@@ -47,33 +48,22 @@ export const ShapeLibrary: React.FC = () => {
     gap: '20px',
   };
 
-  const cardStyle: React.CSSProperties = {
-    backgroundColor: '#ffffff', // High-contrast clean white card backing
-    borderRadius: '16px',
-    padding: '16px',
-    border: '1px solid rgba(17, 17, 17, 0.06)',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.015)',
-    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-  };
-
   const labelStyle: React.CSSProperties = {
     fontFamily: THEME.fonts.tech,
     fontSize: '12px',
     fontWeight: 700,
-    color: '#111111',
+    color: '#0F172A',
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
     display: 'flex',
     justifyContent: 'space-between',
+    marginBottom: '10px',
   };
 
   const fretsSpanStyle: React.CSSProperties = {
-    color: THEME.colors.textSecondary,
+    color: '#78716C',
     fontSize: '11px',
-    fontWeight: 400,
+    fontWeight: 500,
   };
 
   // Render 5 Pentatonic Positions
@@ -81,20 +71,12 @@ export const ShapeLibrary: React.FC = () => {
     return [1, 2, 3, 4, 5].map((pos) => {
       const range = getPentatonicPositionRange(selectedKey, currentTuningNotes, pos);
       return (
-        <div 
-          key={pos} 
-          style={cardStyle}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.04)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.015)';
-          }}
+        <div
+          key={pos}
+          className="p-4 rounded-xl bg-white/90 border border-stone-200/80 shadow-xs hover:border-stone-300 transition-all"
         >
           <div style={labelStyle}>
-            <span>Position {pos}</span>
+            <span className="font-bold text-stone-900">Position {pos}</span>
             <span style={fretsSpanStyle}>Frets {range[0]} - {range[1]}</span>
           </div>
           <Fretboard
@@ -112,20 +94,12 @@ export const ShapeLibrary: React.FC = () => {
     return shapes.map((shape) => {
       const range = getCagedRange(selectedKey, currentTuningNotes, shape) || [0, 4];
       return (
-        <div 
-          key={shape} 
-          style={cardStyle}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.04)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.015)';
-          }}
+        <div
+          key={shape}
+          className="p-4 rounded-xl bg-white/90 border border-stone-200/80 shadow-xs hover:border-stone-300 transition-all"
         >
           <div style={labelStyle}>
-            <span>{shape} Shape Chord</span>
+            <span className="font-bold text-stone-900">{shape} Shape Chord</span>
             <span style={fretsSpanStyle}>Frets {range[0]} - {range[1]}</span>
           </div>
           <Fretboard

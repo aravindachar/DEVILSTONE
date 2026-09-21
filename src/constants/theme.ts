@@ -1,32 +1,34 @@
 export const THEME = {
   colors: {
-    // Refined Dark Theme Palette (Designed by Apple/Linear/Raycast aesthetic)
-    background: '#000000',        // Pitch Black
-    cardBackground: 'rgba(18, 24, 39, 0.65)', // Surface #121827 backing
-    textPrimary: '#F4F4F2',       // Soft off-white text
-    textSecondary: '#94A3B8',     // Muted slate gray
-    textMuted: '#4B5563',
+    // Warm Studio Cream Palette (Linear/Apple/FretMap aesthetic)
+    background: '#FAF7EE',        // Warm Studio Parchment
+    cardBackground: 'rgba(255, 255, 255, 0.88)', // Studio White surface backing
+    textPrimary: '#0F172A',       // Deep Slate / Charcoal
+    textSecondary: '#64748B',     // Muted slate gray
+    textMuted: '#94A3B8',
     
     // Core brand highlights
-    primary: '#FFFFFF',           // Primary buttons
-    primaryDark: '#F4F4F2',
-    primaryGlow: 'rgba(255, 255, 255, 0.05)',
+    primary: '#0F172A',           // Primary dark button
+    primaryDark: '#020617',
+    primaryGlow: 'rgba(15, 23, 42, 0.05)',
     cyberCyan: '#00D7FF',         // Electric Cyan accent
+    terracotta: '#D9531E',        // Signature burnt orange / root pill
     
     // Translucent surfaces & borders
-    secondary: 'rgba(255, 255, 255, 0.04)',
-    secondaryBorder: 'rgba(255, 255, 255, 0.06)',
+    secondary: 'rgba(0, 0, 0, 0.04)',
+    secondaryBorder: 'rgba(0, 0, 0, 0.08)',
     
     accentCrimson: '#EF4444',      // Desaturated Coral Red
     accentCrimsonGlow: 'rgba(239, 68, 68, 0.15)',
     
-    pitchBlack: '#000000',
-    
-    // Board Styling (High-contrast slate board)
-    nutColor: '#1E293B',
-    stringSilver: '#64748B',
-    fretLine: '#94A3B8', // Solid nickel fret wire
-    fretDot: '#475569',                // dark clay dots
+    // Board Styling (Authentic Lacquered Maple Neck)
+    mapleLight: '#F6EAD5',
+    mapleMid: '#EEDBBA',
+    mapleDark: '#DFBF88',
+    nutColor: '#FAF8F2',           // Bleached Bone Nut
+    stringSilver: '#475569',
+    fretLine: '#94A3B8',          // Crowned nickel fret wire
+    fretDot: '#18181B',           // Iconic Black Phenolic Dots for Maple necks
   },
   fonts: {
     tech: '"Inter", system-ui, sans-serif',
